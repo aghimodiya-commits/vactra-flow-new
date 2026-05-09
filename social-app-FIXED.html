@@ -21,13 +21,14 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // Aapki asli details ke saath config
         const firebaseConfig = {
-            apiKey: "AIzaSyCx_ZUADYlOtBDOyJgB...", 
+            apiKey: "AIzaSyCx_ZUADYlOtBDOyJgB4pXyS8Z3YmX1gE", 
             authDomain: "vactra-flow-ca379.firebaseapp.com",
             projectId: "vactra-flow-ca379",
             storageBucket: "vactra-flow-ca379.appspot.com",
             messagingSenderId: "954998039321",
-            appId: "1:954998039321:web:b926ed..."
+            appId: "1:954998039321:web:b926ed057d472661f77622"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -36,7 +37,8 @@
 
         window.loginWithGoogle = () => {
             signInWithPopup(auth, provider).then((result) => {
-                alert("Hello " + result.user.displayName + "! Login Successful.");
+                alert("Namaste " + result.user.displayName + "! Login Successful.");
+                window.location.href = "https://aghimodiya-commits.github.io/vactra-flow-new/manifest.json"; 
             }).catch((error) => {
                 alert("Error: " + error.message);
             });
