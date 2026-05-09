@@ -21,7 +21,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Firebase Config (Aapki latest details ke saath)
         const firebaseConfig = {
             apiKey: "AIzaSyCx_ZUADYlOtBDOyJgBjZBfgvQ8LFM0n2M", 
             authDomain: "vactra-flow-ca379.firebaseapp.com",
@@ -37,12 +36,12 @@
 
         window.loginWithGoogle = () => {
             signInWithPopup(auth, provider).then((result) => {
-                alert("Namaste " + result.user.displayName + "! Login Successful.");
+                alert("Namaste " + result.user.displayName + "! Login Ho Gaya.");
                 
-                // --- REDIRECT LOGIC ---
-                // Login ke baad user ko yahan bheja jayega
-                // Agar aapki main file ka naam 'home.html' hai toh wahi likhein
-                window.location.href = "index.html"; 
+                // LOGIN KE BAAD KAUNSI FILE KHOLNI HAI?
+                // Agar aapne 'home.html' banayi hai toh yaha 'home.html' likhein.
+                // Abhi ke liye main ise manifest.json par bhej raha hoon taaki 404 na aaye.
+                window.location.href = "manifest.json"; 
                 
             }).catch((error) => {
                 alert("Login Error: " + error.message);
