@@ -16,7 +16,7 @@
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
-  // Login Button Function
+  // Button ke liye login function
   window.loginWithGoogle = () => {
     signInWithPopup(auth, provider).then((result) => {
       alert("Swagat hai, " + result.user.displayName + "!");
