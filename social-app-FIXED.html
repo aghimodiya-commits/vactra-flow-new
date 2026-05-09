@@ -1,52 +1,12 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-black text-white flex items-center justify-center min-h-screen">
-    <div class="text-center p-10 bg-gray-900 rounded-2xl border border-blue-500 shadow-2xl">
-        <h1 class="text-4xl font-bold mb-4 text-blue-400">Vactra Flow</h1>
-        <p class="text-gray-400 mb-8">Google account se login karein</p>
+window.loginWithGoogle = () => {
+    signInWithPopup(auth, provider).then((result) => {
+        alert("Namaste " + result.user.displayName + "! Login Ho Gaya.");
         
-        <button onclick="loginWithGoogle()" class="bg-white text-black px-8 py-3 rounded-full font-bold flex items-center gap-3 hover:scale-105 transition-transform mx-auto">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20">
-            Login with Google
-        </button>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCx_ZUADYlOtBDOyJgBjZBfgvQ8LFM0n2M", 
-            authDomain: "vactra-flow-ca379.firebaseapp.com",
-            projectId: "vactra-flow-ca379",
-            storageBucket: "vactra-flow-ca379.firebasestorage.app",
-            messagingSenderId: "954998039321",
-            appId: "1:954998039321:web:b926ed57c22766b9a0db88"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        window.loginWithGoogle = () => {
-            signInWithPopup(auth, provider).then((result) => {
-                alert("Namaste " + result.user.displayName + "! Login Ho Gaya.");
-                
-                // LOGIN KE BAAD KAUNSI FILE KHOLNI HAI?
-                // Agar aapne 'home.html' banayi hai toh yaha 'home.html' likhein.
-                // Abhi ke liye main ise manifest.json par bhej raha hoon taaki 404 na aaye.
-                window.location.href = "manifest.json"; 
-                
-            }).catch((error) => {
-                alert("Login Error: " + error.message);
-            });
-        };
-    </script>
-</body>
-</html>
+        // Yaha niche apni sahi file ka naam likhein
+        // Maine 'vactra.html' dala hai kyunki ye aapki repository mein hai
+        window.location.href = "vactra.html"; 
+        
+    }).catch((error) => {
+        alert("Login Error: " + error.message);
+    });
+};
