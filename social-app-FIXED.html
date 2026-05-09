@@ -21,6 +21,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // Firebase Config (Aapki latest details ke saath)
         const firebaseConfig = {
             apiKey: "AIzaSyCx_ZUADYlOtBDOyJgBjZBfgvQ8LFM0n2M", 
             authDomain: "vactra-flow-ca379.firebaseapp.com",
@@ -37,6 +38,12 @@
         window.loginWithGoogle = () => {
             signInWithPopup(auth, provider).then((result) => {
                 alert("Namaste " + result.user.displayName + "! Login Successful.");
+                
+                // --- REDIRECT LOGIC ---
+                // Login ke baad user ko yahan bheja jayega
+                // Agar aapki main file ka naam 'home.html' hai toh wahi likhein
+                window.location.href = "index.html"; 
+                
             }).catch((error) => {
                 alert("Login Error: " + error.message);
             });
