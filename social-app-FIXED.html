@@ -21,13 +21,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // Aapka naya wala Firebase Config
         const firebaseConfig = {
-            apiKey: "AIzaSyCx_ZUADYlOtBDOyJgB4pXyS8Z3YmX1gE", 
+            apiKey: "AIzaSyCx_ZUADYlOtBDOyJgBjZBfgvQ8LFM0n2M", 
             authDomain: "vactra-flow-ca379.firebaseapp.com",
             projectId: "vactra-flow-ca379",
-            storageBucket: "vactra-flow-ca379.appspot.com",
+            storageBucket: "vactra-flow-ca379.firebasestorage.app",
             messagingSenderId: "954998039321",
-            appId: "1:954998039321:web:b926ed057d472661f77622"
+            appId: "1:954998039321:web:b926ed57c22766b9a0db88",
+            measurementId: "G-9NS7N4R8XR"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -36,9 +38,11 @@
 
         window.loginWithGoogle = () => {
             signInWithPopup(auth, provider).then((result) => {
-                alert("Namaste " + result.user.displayName + "! Login Successful.");
+                alert("Swagat hai " + result.user.displayName + "!");
+                // Login ke baad aapki site khul jayegi
+                window.location.href = "https://aghimodiya-commits.github.io/vactra-flow-new/manifest.json";
             }).catch((error) => {
-                alert("Error: " + error.message);
+                alert("Login Error: " + error.message);
             });
         };
     </script>
