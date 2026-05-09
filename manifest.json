@@ -1,0 +1,12 @@
+{
+  "background_color": "#d0cbcb",
+  "description": "Vactra Flow - A modern social networking platform.",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Vactra Flow",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Vactra Flow",
+  "start_url": "/",
+  "theme_color": "#000000"
+}
