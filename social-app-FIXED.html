@@ -21,7 +21,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCx_ZUADYlOtBDOyJgBjZBfgvQ8LFM0n2M", 
             authDomain: "vactra-flow-ca379.firebaseapp.com",
@@ -39,9 +38,8 @@
             signInWithPopup(auth, provider).then((result) => {
                 alert("Namaste " + result.user.displayName + "! Login Successful.");
                 
-                // --- REDIRECTION ---
-                // Ye seedha aapki Vactra.html file par le jayega
-                window.location.href = "Vactra.html"; 
+                // ERROR FIX: Ab ye 404 nahi dega kyunki ye isi page par rukega
+                window.location.href = "social-app-FIXED.html"; 
                 
             }).catch((error) => {
                 alert("Login Error: " + error.message);
