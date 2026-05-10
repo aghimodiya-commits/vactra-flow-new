@@ -3,76 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Shorts</title>
+    <title>Vactra Flow - Original System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
+        body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: sans-serif; }
+        
+        /* Shorts Swiping Container */
+        .feed {
+            height: 100vh;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            scrollbar-width: none;
+        }
         .feed::-webkit-scrollbar { display: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
+        
+        .card {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            background: #000;
+        }
+        
         video { width: 100%; height: 100%; object-fit: cover; }
-        .overlay { background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 40%); }
+
+        /* VACTRA FLOW Header Style */
+        .brand-name {
+            font-family: 'Arial Black', sans-serif;
+            letter-spacing: -1px;
+        }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 w-full p-6 flex justify-between items-center z-50">
-        <h1 class="text-3xl font-extrabold text-blue-500 italic tracking-tighter">VFlow</h1>
+    <header class="fixed top-0 w-full p-6 flex justify-between items-center z-50 bg-gradient-to-b from-black/70 to-transparent">
+        <div class="flex flex-col">
+            <h1 class="text-2xl font-black text-white brand-name italic">
+                VACTRA <span class="text-blue-500">FLOW</span>
+            </h1>
+            <p class="text-[9px] text-gray-400 tracking-[4px] uppercase font-bold -mt-1">Original System</p>
+        </div>
         <div class="flex gap-6 text-2xl">
             <i class="fas fa-search"></i>
             <i class="fas fa-camera"></i>
         </div>
     </header>
 
-    <main class="feed">
+    <main class="feed" id="mainFeed">
+        
         <div class="card">
-            <video loop playsinline autoplay muted>
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-circuit-board-of-a-computer-436-large.mp4" type="video/mp4">
+            <video loop playsinline autoplay muted class="player">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-dancing-2322-large.mp4" type="video/mp4">
             </video>
-            <div class="overlay absolute inset-0"></div>
             <div class="absolute bottom-24 left-4 z-10">
-                <p class="font-bold text-lg">@Vactra_Tech</p>
-                <p class="text-sm">Future of AI Content 🧬 #VactraFlow</p>
+                <p class="font-bold text-lg">@Asheesh_Kumar</p>
+                <p class="text-sm opacity-90">Vactra Flow Launching Soon! 🚀 #System</p>
             </div>
-            <div class="absolute bottom-32 right-4 flex flex-col gap-8 text-center">
-                <div class="group"><i class="fas fa-heart text-3xl hover:text-red-500 transition-colors"></i><p class="text-xs mt-1">15K</p></div>
-                <div><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs mt-1">800</p></div>
+            <div class="absolute bottom-32 right-4 flex flex-col gap-8 text-center z-20">
+                <div><i class="fas fa-heart text-3xl"></i><p class="text-xs mt-1">20K</p></div>
+                <div><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs mt-1">500</p></div>
                 <i class="fas fa-share text-3xl"></i>
             </div>
         </div>
 
         <div class="card">
-            <video loop playsinline muted>
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4" type="video/mp4">
+            <video loop playsinline muted class="player">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-neon-lights-2313-large.mp4" type="video/mp4">
             </video>
-            <div class="overlay absolute inset-0"></div>
             <div class="absolute bottom-24 left-4 z-10">
-                <p class="font-bold text-lg">@Asheesh_Kumar</p>
-                <p class="text-sm">Bhopal System! Tap for sound 🍎🔥 #VactraFlow</p>
+                <p class="font-bold text-lg">@Vactra_Official</p>
+                <p class="text-sm opacity-90">Bhopal Content Scene 🔥 #VactraFlow</p>
             </div>
-            <div class="absolute bottom-32 right-4 flex flex-col gap-8 text-center">
-                <div class="group"><i class="fas fa-heart text-3xl hover:text-red-500 transition-colors"></i><p class="text-xs mt-1">22K</p></div>
-                <div><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs mt-1">1.2K</p></div>
+            <div class="absolute bottom-32 right-4 flex flex-col gap-8 text-center z-20">
+                <div><i class="fas fa-heart text-3xl"></i><p class="text-xs mt-1">15K</p></div>
+                <div><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs mt-1">200</p></div>
                 <i class="fas fa-share text-3xl"></i>
             </div>
         </div>
+
     </main>
 
     <nav class="fixed bottom-0 w-full bg-black/95 border-t border-white/10 flex justify-around items-center py-4 z-50">
-        <div class="flex flex-col items-center text-blue-500"><i class="fas fa-home text-2xl"></i><span class="text-[10px] mt-1">Home</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-bolt text-2xl"></i><span class="text-[10px] mt-1">Shorts</span></div>
-        <div class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl shadow-[0_0_15px_rgba(255,255,255,0.4)]">+</div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-bell text-2xl"></i><span class="text-[10px] mt-1">Inbox</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-2xl"></i><span class="text-[10px] mt-1">Profile</span></div>
+        <div class="flex flex-col items-center text-blue-500">
+            <i class="fas fa-home text-2xl"></i>
+            <span class="text-[10px] mt-1 font-bold">Home</span>
+        </div>
+        <div class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-bolt text-2xl"></i>
+            <span class="text-[10px] mt-1">Shorts</span>
+        </div>
+        <div class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl shadow-lg">+</div>
+        
+        <div class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-envelope text-2xl"></i>
+            <span class="text-[10px] mt-1">Inbox</span>
+        </div>
+        <div class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-user-circle text-2xl"></i>
+            <span class="text-[10px] mt-1">Profile</span>
+        </div>
     </nav>
 
     <script>
+        // Swiping Play/Pause Logic
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
-                    video.play().catch(() => {}); 
+                    video.play().catch(() => {});
                 } else {
                     video.pause();
                 }
@@ -80,6 +119,13 @@
         }, { threshold: 0.6 });
 
         document.querySelectorAll('.card').forEach(card => observer.observe(card));
+
+        // Click on video to unmute/mute
+        document.querySelectorAll('.player').forEach(v => {
+            v.addEventListener('click', () => {
+                v.muted = !v.muted;
+            });
+        });
     </script>
 
 </body>
