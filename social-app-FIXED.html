@@ -3,59 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - YouTube System</title>
+    <title>Vactra Flow - Original</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: sans-serif; }
+        body { background-color: #000; margin: 0; color: white; overflow: hidden; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; border-bottom: 1px solid #111; }
+        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .yt-shadow { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 50%); }
+        .overlay-gradient { background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%); }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 w-full p-5 flex justify-between items-center z-50 bg-gradient-to-b from-black/90 to-transparent">
-        <div class="flex items-center gap-1">
-            <h1 class="text-2xl font-black text-white italic tracking-tighter">VACTRA <span class="text-blue-500">FLOW</span></h1>
-        </div>
-        <div class="flex gap-6 text-xl items-center">
-            <i class="fas fa-search"></i>
-            <i class="fas fa-video"></i>
-            <i class="fas fa-ellipsis-v"></i>
-        </div>
+    <header class="fixed top-0 w-full p-5 flex justify-between items-center z-50">
+        <h1 class="text-2xl font-black italic">VACTRA <span class="text-blue-500">FLOW</span></h1>
+        <div class="flex gap-5 text-xl"><i class="fas fa-search"></i><i class="fas fa-video"></i></div>
     </header>
 
-    <main class="feed" id="shortsFeed">
+    <main class="feed">
         <div class="card">
-            <video loop playsinline autoplay muted class="yt-video">
-                <source src="https://v1.nitrocdn.com/dQkrEExoHshFzWpLNoNidLpUqBwJkEAt/assets/static/optimized/rev-5916892/wp-content/uploads/2022/01/hero-video.mp4" type="video/mp4">
+            <video loop playsinline autoplay muted>
+                <source src="https://res.cloudinary.com/demo/video/upload/sp_auto/mountain_bike.mp4" type="video/mp4">
             </video>
-            <div class="yt-shadow absolute inset-0"></div>
-            <div class="absolute bottom-24 left-4 z-10 flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center font-bold">A</div>
-                <div>
-                    <p class="font-bold text-sm text-white">@Asheesh_Kumar • <span class="text-blue-400 font-normal">Subscribe</span></p>
-                    <p class="text-xs text-gray-200 mt-1">Bhopal ka pehla video platform! 🍎🔥</p>
-                </div>
+            <div class="overlay-gradient absolute inset-0"></div>
+            <div class="absolute bottom-24 left-4 z-10">
+                <p class="font-bold">@Asheesh_Kumar</p>
+                <p class="text-sm opacity-80">Bhopal Content Scene! 🚀 #VactraFlow</p>
             </div>
-            <div class="absolute bottom-28 right-3 flex flex-col gap-6 text-center z-20">
-                <div class="flex flex-col items-center"><div class="bg-gray-800/50 p-3 rounded-full mb-1"><i class="fas fa-thumbs-up text-xl"></i></div><span class="text-[10px]">Like</span></div>
-                <div class="flex flex-col items-center"><div class="bg-gray-800/50 p-3 rounded-full mb-1"><i class="fas fa-comment-alt text-xl"></i></div><span class="text-[10px]">240</span></div>
-                <div class="flex flex-col items-center"><div class="bg-gray-800/50 p-3 rounded-full mb-1"><i class="fas fa-share text-xl"></i></div><span class="text-[10px]">Share</span></div>
-                <div class="w-10 h-10 border-2 border-white rounded-md overflow-hidden bg-gray-700 mt-2"></div>
+            <div class="absolute bottom-28 right-4 flex flex-col gap-6 text-center z-20">
+                <i class="fas fa-heart text-3xl" onclick="this.style.color='red'"></i>
+                <i class="fas fa-comment-dots text-3xl"></i>
+                <i class="fas fa-share text-3xl"></i>
+            </div>
+        </div>
+
+        <div class="card">
+            <video loop playsinline muted>
+                <source src="https://res.cloudinary.com/demo/video/upload/v1619001391/video_sample.mp4" type="video/mp4">
+            </video>
+            <div class="overlay-gradient absolute inset-0"></div>
+            <div class="absolute bottom-24 left-4 z-10">
+                <p class="font-bold">@Vactra_Official</p>
+                <p class="text-sm opacity-80">Testing New Features 🔥</p>
+            </div>
+            <div class="absolute bottom-28 right-4 flex flex-col gap-6 text-center z-20">
+                <i class="fas fa-heart text-3xl" onclick="this.style.color='red'"></i>
+                <i class="fas fa-comment-dots text-3xl"></i>
+                <i class="fas fa-share text-3xl"></i>
             </div>
         </div>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-black/95 border-t border-white/10 flex justify-around items-center py-3 z-50">
-        <div class="flex flex-col items-center text-white"><i class="fas fa-home text-xl"></i><span class="text-[9px] mt-1">Home</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-play-circle text-xl"></i><span class="text-[9px] mt-1">Shorts</span></div>
-        <div class="text-white text-4xl font-light">+</div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-layer-group text-xl"></i><span class="text-[9px] mt-1">Subscriptions</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-xl"></i><span class="text-[9px] mt-1">You</span></div>
+    <nav class="fixed bottom-0 w-full bg-black/90 border-t border-white/10 flex justify-around items-center py-4 z-50">
+        <i class="fas fa-home text-xl text-blue-500"></i>
+        <i class="fas fa-bolt text-xl text-gray-400"></i>
+        <div class="bg-white text-black px-4 py-1 rounded-lg font-bold text-2xl">+</div>
+        <i class="fas fa-envelope text-xl text-gray-400"></i>
+        <i class="fas fa-user-circle text-xl text-gray-400"></i>
     </nav>
 
     <script>
@@ -68,8 +74,7 @@
                     video.pause();
                 }
             });
-        }, { threshold: 0.7 });
-
+        }, { threshold: 0.6 });
         document.querySelectorAll('.card').forEach(card => observer.observe(card));
     </script>
 </body>
