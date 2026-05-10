@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Premium</title>
+    <title>Vactra Flow - Unique</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; margin: 0; padding: 0; color: white; overflow: hidden; }
+        body { background-color: #000; margin: 0; padding: 0; color: white; overflow: hidden; font-family: 'Inter', sans-serif; }
         .video-container {
             height: calc(100vh - 130px);
             scroll-snap-type: y mandatory;
@@ -23,15 +23,22 @@
             background: #000;
         }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .premium-glow { text-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .premium-glow { text-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
+        .v-logo {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: 900;
+        }
     </style>
 </head>
 <body>
 
     <header class="flex justify-between items-center p-4 bg-black/90 backdrop-blur-lg sticky top-0 z-50 border-b border-white/10">
         <div class="flex items-center gap-2">
-            <i class="fab fa-apple text-3xl text-white"></i> 
-            <span class="text-xl font-bold tracking-tight">Vactra <span class="text-blue-500">Flow</span></span>
+            <span class="v-logo">V</span>
+            <span class="text-xl font-bold tracking-tight">Flow</span>
         </div>
         <div class="flex gap-5 text-xl opacity-80">
             <i class="fas fa-search"></i>
@@ -41,40 +48,35 @@
 
     <main class="video-container">
         
-        <div class="video-card" onclick="toggleSound(this)">
+        <div class="video-card">
             <video id="vactraVideo" loop autoplay muted playsinline preload="auto">
                 <source src="https://v1.nitrocdn.com/dQkrEExoHshFzWpLNoNidLpUqBwJkEAt/assets/static/optimized/rev-5916892/wp-content/uploads/2022/01/hero-video.mp4" type="video/mp4">
             </video>
+
+            <button onclick="toggleSound()" class="absolute top-4 right-4 z-30 bg-black/40 p-3 rounded-full border border-white/20">
+                <i id="soundIcon" class="fas fa-volume-mute"></i>
+            </button>
             
             <div class="absolute bottom-10 left-4 right-16 z-10 pointer-events-none">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 flex items-center justify-center font-black border-2 border-white/30 shadow-xl">A</div>
                     <p class="font-bold text-lg premium-glow">@Asheesh_Kumar</p>
-                    <button class="bg-blue-500 text-white px-5 py-1 rounded-full text-xs font-black ml-2 shadow-lg pointer-events-auto hover:bg-blue-600 transition">FOLLOW</button>
+                    <button class="bg-blue-500 text-white px-5 py-1 rounded-full text-xs font-black ml-2 shadow-lg pointer-events-auto">SUBSCRIBE</button>
                 </div>
-                <p class="text-sm opacity-95 drop-shadow-lg leading-relaxed">
-                    Mixing Pharmacy & Creativity in Bhopal! 🍎🔥 <br>
-                    <span class="text-blue-400 font-medium">Tap anywhere for sound!</span>
-                </p>
+                <p class="text-sm opacity-95 drop-shadow-lg">Bhopal's New Creative Era! 🚀✨ #VactraFlow #ContentCreation</p>
             </div>
 
             <div class="absolute bottom-12 right-3 flex flex-col gap-6 text-center z-20">
-                <div class="flex flex-col items-center group cursor-pointer">
-                    <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20 group-hover:bg-red-500 transition-all duration-300">
-                        <i class="fas fa-heart text-2xl text-white"></i>
-                    </div>
-                    <span class="text-[10px] mt-1 font-bold">15.2K</span>
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20"><i class="fas fa-heart text-2xl text-red-500"></i></div>
+                    <span class="text-[10px] mt-1 font-bold">12K</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer">
-                    <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20">
-                        <i class="fas fa-comment-dots text-2xl"></i>
-                    </div>
-                    <span class="text-[10px] mt-1 font-bold">450</span>
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20"><i class="fas fa-comment-dots text-2xl"></i></div>
+                    <span class="text-[10px] mt-1 font-bold">890</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer">
-                    <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20">
-                        <i class="fas fa-share text-2xl"></i>
-                    </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20"><i class="fas fa-share text-2xl"></i></div>
                     <span class="text-[10px] mt-1 font-bold">Share</span>
                 </div>
             </div>
@@ -83,17 +85,19 @@
     </main>
 
     <nav class="fixed bottom-0 w-full bg-black/95 border-t border-white/5 flex justify-around items-center py-4 z-50">
-        <div class="text-blue-500 flex flex-col items-center"><i class="fas fa-home text-xl"></i><span class="text-[9px] mt-1 font-bold uppercase tracking-wider">Home</span></div>
-        <div class="text-gray-500 flex flex-col items-center"><i class="fas fa-bolt text-xl"></i><span class="text-[9px] mt-1 font-bold uppercase tracking-wider">Shorts</span></div>
-        <div class="text-white hover:scale-110 transition cursor-pointer"><i class="fas fa-plus-circle text-4xl"></i></div>
-        <div class="text-gray-500 flex flex-col items-center"><i class="fas fa-layer-group text-xl"></i><span class="text-[9px] mt-1 font-bold uppercase tracking-wider">Library</span></div>
-        <div class="text-gray-500 flex flex-col items-center"><i class="fas fa-user-circle text-xl"></i><span class="text-[9px] mt-1 font-bold uppercase tracking-wider">Profile</span></div>
+        <div class="text-blue-500 flex flex-col items-center"><i class="fas fa-home text-xl"></i><span class="text-[9px] mt-1 font-bold">Home</span></div>
+        <div class="text-gray-500 flex flex-col items-center"><i class="fas fa-compass text-xl"></i><span class="text-[9px] mt-1">Explore</span></div>
+        <div class="text-white bg-gradient-to-tr from-blue-600 to-purple-600 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-plus text-2xl"></i></div>
+        <div class="text-gray-500 flex flex-col items-center"><i class="fas fa-heart text-xl"></i><span class="text-[9px] mt-1">Inbox</span></div>
+        <div class="text-gray-500 flex flex-col items-center"><i class="fas fa-user-circle text-xl"></i><span class="text-[9px] mt-1">Profile</span></div>
     </nav>
 
     <script>
-        function toggleSound(card) {
-            const video = card.querySelector('video');
+        function toggleSound() {
+            const video = document.getElementById('vactraVideo');
+            const icon = document.getElementById('soundIcon');
             video.muted = !video.muted;
+            icon.className = video.muted ? "fas fa-volume-mute" : "fas fa-volume-up";
         }
     </script>
 
