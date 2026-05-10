@@ -39,9 +39,9 @@
             signInWithPopup(auth, provider).then((result) => {
                 alert("Namaste " + result.user.displayName + "! Login Successful.");
                 
-                // --- REDIRECTION FIX ---
-                // Ab ye seedha vactra.html par le jayega
-                window.location.href = "Vactra.html";
+                // --- REDIRECTION ---
+                // Ye seedha aapki Vactra.html file par le jayega
+                window.location.href = "Vactra.html"; 
                 
             }).catch((error) => {
                 alert("Login Error: " + error.message);
