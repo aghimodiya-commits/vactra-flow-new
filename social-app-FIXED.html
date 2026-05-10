@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Real Shorts</title>
+    <title>Vactra Flow - Shorts</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; margin: 0; color: white; overflow: hidden; }
+        body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: sans-serif; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; }
+        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
+        video { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
     <header class="fixed top-0 w-full p-4 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent z-50">
-        <h1 class="text-2xl font-bold text-blue-500 italic">VFlow</h1>
+        <h1 class="text-2xl font-bold text-blue-500 italic tracking-tighter">VFlow</h1>
         <div class="flex gap-4 text-xl">
             <i class="fas fa-search"></i>
             <i class="fas fa-camera"></i>
@@ -26,39 +26,59 @@
 
     <main class="feed" id="mainFeed">
         <div class="card">
-            <iframe src="https://www.youtube.com/embed/9XInPbV0iX0?autoplay=1&mute=1&loop=1&playlist=9XInPbV0iX0" allow="autoplay"></iframe>
+            <video loop playsinline autoplay muted>
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-dancing-2322-large.mp4" type="video/mp4">
+            </video>
             <div class="absolute bottom-24 left-4 z-10">
-                <p class="font-bold">@Trending_Now</p>
-                <p class="text-sm">Ab videos chalengi! 🔥 #VactraFlow</p>
+                <p class="font-bold">@Asheesh_Kumar</p>
+                <p class="text-sm">Bhopal Content Creator System! 🚀 #Vactra</p>
             </div>
             <div class="absolute bottom-28 right-4 flex flex-col gap-6 text-center">
-                <i class="fas fa-heart text-2xl"></i>
-                <i class="fas fa-comment-dots text-2xl"></i>
+                <div class="flex flex-col"><i class="fas fa-heart text-2xl text-white"></i><span class="text-xs">12K</span></div>
+                <div class="flex flex-col"><i class="fas fa-comment-dots text-2xl text-white"></i><span class="text-xs">450</span></div>
                 <i class="fas fa-share text-2xl"></i>
             </div>
         </div>
 
         <div class="card">
-            <iframe src="https://www.youtube.com/embed/5_X9T3X9P8g?autoplay=0&mute=1&loop=1&playlist=5_X9T3X9P8g" allow="autoplay"></iframe>
+            <video loop playsinline muted>
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-neon-lights-2313-large.mp4" type="video/mp4">
+            </video>
             <div class="absolute bottom-24 left-4 z-10">
-                <p class="font-bold">@Asheesh_Kumar</p>
-                <p class="text-sm">Asli YouTube Talent! 🎥🚀</p>
+                <p class="font-bold">@Vactra_Flow</p>
+                <p class="text-sm">New App Interface Testing! 🔥</p>
             </div>
             <div class="absolute bottom-28 right-4 flex flex-col gap-6 text-center">
-                <i class="fas fa-heart text-2xl"></i>
-                <i class="fas fa-comment-dots text-2xl"></i>
+                <div class="flex flex-col"><i class="fas fa-heart text-2xl text-white"></i><span class="text-xs">8K</span></div>
+                <div class="flex flex-col"><i class="fas fa-comment-dots text-2xl text-white"></i><span class="text-xs">120</span></div>
                 <i class="fas fa-share text-2xl"></i>
             </div>
         </div>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-black/95 border-t border-white/10 flex justify-around items-center py-4 z-50">
+    <nav class="fixed bottom-0 w-full bg-black/90 border-t border-white/10 flex justify-around items-center py-4 z-50">
         <div class="flex flex-col items-center text-blue-500"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1">Home</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-play-circle text-xl"></i><span class="text-[10px] mt-1">Shorts</span></div>
-        <div class="bg-white text-black px-4 py-1 rounded-lg font-bold text-2xl shadow-lg">+</div>
+        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-bolt text-xl"></i><span class="text-[10px] mt-1">Shorts</span></div>
+        <div class="bg-white text-black px-4 py-1 rounded-lg font-bold text-2xl">+</div>
         <div class="flex flex-col items-center text-gray-400"><i class="fas fa-envelope text-xl"></i><span class="text-[10px] mt-1">Inbox</span></div>
         <div class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-xl"></i><span class="text-[10px] mt-1">Profile</span></div>
     </nav>
+
+    <script>
+        // Intersection Observer to auto-play/pause videos on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector('video');
+                if (entry.isIntersecting) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            });
+        }, { threshold: 0.7 });
+
+        document.querySelectorAll('.card').forEach(card => observer.observe(card));
+    </script>
 
 </body>
 </html>
