@@ -3,110 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Original System</title>
+    <title>Vactra Flow - YouTube System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: sans-serif; }
-        
-        /* Shorts Swiping Container */
-        .feed {
-            height: 100vh;
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            scrollbar-width: none;
-        }
+        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
-        
-        .card {
-            scroll-snap-align: start;
-            height: 100vh;
-            width: 100%;
-            position: relative;
-            background: #000;
-        }
-        
+        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; border-bottom: 1px solid #111; }
         video { width: 100%; height: 100%; object-fit: cover; }
-
-        /* VACTRA FLOW Header Style */
-        .brand-name {
-            font-family: 'Arial Black', sans-serif;
-            letter-spacing: -1px;
-        }
+        .yt-shadow { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 50%); }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 w-full p-6 flex justify-between items-center z-50 bg-gradient-to-b from-black/70 to-transparent">
-        <div class="flex flex-col">
-            <h1 class="text-2xl font-black text-white brand-name italic">
-                VACTRA <span class="text-blue-500">FLOW</span>
-            </h1>
-            <p class="text-[9px] text-gray-400 tracking-[4px] uppercase font-bold -mt-1">Original System</p>
+    <header class="fixed top-0 w-full p-5 flex justify-between items-center z-50 bg-gradient-to-b from-black/90 to-transparent">
+        <div class="flex items-center gap-1">
+            <h1 class="text-2xl font-black text-white italic tracking-tighter">VACTRA <span class="text-blue-500">FLOW</span></h1>
         </div>
-        <div class="flex gap-6 text-2xl">
+        <div class="flex gap-6 text-xl items-center">
             <i class="fas fa-search"></i>
-            <i class="fas fa-camera"></i>
+            <i class="fas fa-video"></i>
+            <i class="fas fa-ellipsis-v"></i>
         </div>
     </header>
 
-    <main class="feed" id="mainFeed">
-        
+    <main class="feed" id="shortsFeed">
         <div class="card">
-            <video loop playsinline autoplay muted class="player">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-dancing-2322-large.mp4" type="video/mp4">
+            <video loop playsinline autoplay muted class="yt-video">
+                <source src="https://v1.nitrocdn.com/dQkrEExoHshFzWpLNoNidLpUqBwJkEAt/assets/static/optimized/rev-5916892/wp-content/uploads/2022/01/hero-video.mp4" type="video/mp4">
             </video>
-            <div class="absolute bottom-24 left-4 z-10">
-                <p class="font-bold text-lg">@Asheesh_Kumar</p>
-                <p class="text-sm opacity-90">Vactra Flow Launching Soon! 🚀 #System</p>
+            <div class="yt-shadow absolute inset-0"></div>
+            <div class="absolute bottom-24 left-4 z-10 flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center font-bold">A</div>
+                <div>
+                    <p class="font-bold text-sm text-white">@Asheesh_Kumar • <span class="text-blue-400 font-normal">Subscribe</span></p>
+                    <p class="text-xs text-gray-200 mt-1">Bhopal ka pehla video platform! 🍎🔥</p>
+                </div>
             </div>
-            <div class="absolute bottom-32 right-4 flex flex-col gap-8 text-center z-20">
-                <div><i class="fas fa-heart text-3xl"></i><p class="text-xs mt-1">20K</p></div>
-                <div><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs mt-1">500</p></div>
-                <i class="fas fa-share text-3xl"></i>
+            <div class="absolute bottom-28 right-3 flex flex-col gap-6 text-center z-20">
+                <div class="flex flex-col items-center"><div class="bg-gray-800/50 p-3 rounded-full mb-1"><i class="fas fa-thumbs-up text-xl"></i></div><span class="text-[10px]">Like</span></div>
+                <div class="flex flex-col items-center"><div class="bg-gray-800/50 p-3 rounded-full mb-1"><i class="fas fa-comment-alt text-xl"></i></div><span class="text-[10px]">240</span></div>
+                <div class="flex flex-col items-center"><div class="bg-gray-800/50 p-3 rounded-full mb-1"><i class="fas fa-share text-xl"></i></div><span class="text-[10px]">Share</span></div>
+                <div class="w-10 h-10 border-2 border-white rounded-md overflow-hidden bg-gray-700 mt-2"></div>
             </div>
         </div>
-
-        <div class="card">
-            <video loop playsinline muted class="player">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-neon-lights-2313-large.mp4" type="video/mp4">
-            </video>
-            <div class="absolute bottom-24 left-4 z-10">
-                <p class="font-bold text-lg">@Vactra_Official</p>
-                <p class="text-sm opacity-90">Bhopal Content Scene 🔥 #VactraFlow</p>
-            </div>
-            <div class="absolute bottom-32 right-4 flex flex-col gap-8 text-center z-20">
-                <div><i class="fas fa-heart text-3xl"></i><p class="text-xs mt-1">15K</p></div>
-                <div><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs mt-1">200</p></div>
-                <i class="fas fa-share text-3xl"></i>
-            </div>
-        </div>
-
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-black/95 border-t border-white/10 flex justify-around items-center py-4 z-50">
-        <div class="flex flex-col items-center text-blue-500">
-            <i class="fas fa-home text-2xl"></i>
-            <span class="text-[10px] mt-1 font-bold">Home</span>
-        </div>
-        <div class="flex flex-col items-center text-gray-500">
-            <i class="fas fa-bolt text-2xl"></i>
-            <span class="text-[10px] mt-1">Shorts</span>
-        </div>
-        <div class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl shadow-lg">+</div>
-        
-        <div class="flex flex-col items-center text-gray-500">
-            <i class="fas fa-envelope text-2xl"></i>
-            <span class="text-[10px] mt-1">Inbox</span>
-        </div>
-        <div class="flex flex-col items-center text-gray-500">
-            <i class="fas fa-user-circle text-2xl"></i>
-            <span class="text-[10px] mt-1">Profile</span>
-        </div>
+    <nav class="fixed bottom-0 w-full bg-black/95 border-t border-white/10 flex justify-around items-center py-3 z-50">
+        <div class="flex flex-col items-center text-white"><i class="fas fa-home text-xl"></i><span class="text-[9px] mt-1">Home</span></div>
+        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-play-circle text-xl"></i><span class="text-[9px] mt-1">Shorts</span></div>
+        <div class="text-white text-4xl font-light">+</div>
+        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-layer-group text-xl"></i><span class="text-[9px] mt-1">Subscriptions</span></div>
+        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-xl"></i><span class="text-[9px] mt-1">You</span></div>
     </nav>
 
     <script>
-        // Swiping Play/Pause Logic
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
@@ -116,17 +68,9 @@
                     video.pause();
                 }
             });
-        }, { threshold: 0.6 });
+        }, { threshold: 0.7 });
 
         document.querySelectorAll('.card').forEach(card => observer.observe(card));
-
-        // Click on video to unmute/mute
-        document.querySelectorAll('.player').forEach(v => {
-            v.addEventListener('click', () => {
-                v.muted = !v.muted;
-            });
-        });
     </script>
-
 </body>
 </html>
