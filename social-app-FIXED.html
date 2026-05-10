@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Professional</title>
+    <title>Vactra Flow - Smooth Feed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; margin: 0; padding: 0; color: white; overflow: hidden; font-family: 'Inter', sans-serif; }
-        
-        /* Smooth Swipe Logic */
+        body { background-color: #000; color: white; overflow: hidden; font-family: sans-serif; }
         .video-container {
-            height: calc(100vh - 75px); /* Adjusted for bottom nav */
+            height: 100vh;
             scroll-snap-type: y mandatory;
             overflow-y: scroll;
             scrollbar-width: none;
@@ -19,120 +17,94 @@
         .video-container::-webkit-scrollbar { display: none; }
         .video-card {
             scroll-snap-align: start;
-            height: calc(100vh - 75px);
+            height: 100vh;
             width: 100%;
             position: relative;
-            background: #000;
         }
         video { width: 100%; height: 100%; object-fit: cover; }
-        
         .v-logo {
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
         }
-        .like-active { color: #ef4444 !important; transform: scale(1.2); transition: 0.3s; }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 w-full p-4 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent z-50">
-        <div class="flex items-center gap-2">
+    <header class="fixed top-0 w-full p-4 flex justify-between items-center bg-gradient-to-b from-black/70 to-transparent z-50">
+        <div class="flex items-center gap-1">
             <span class="v-logo">V</span>
-            <span class="text-xl font-bold tracking-tight">Flow</span>
+            <span class="text-lg font-bold">Flow</span>
         </div>
-        <div class="flex gap-5 text-xl">
-            <i class="fas fa-search opacity-70"></i>
-            <i class="fas fa-camera opacity-70"></i>
+        <div class="flex gap-4 text-lg">
+            <i class="fas fa-search"></i>
+            <i class="fas fa-bars"></i>
         </div>
     </header>
 
-    <main class="video-container" id="feed">
+    <main class="video-container" id="videoContainer">
         
         <div class="video-card">
-            <video loop autoplay muted playsinline class="v-player" onclick="toggleMute(this)">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-low-angle-shot-4725-large.mp4" type="video/mp4">
+            <video loop muted playsinline class="player">
+                <source src="https://v1.nitrocdn.com/dQkrEExoHshFzWpLNoNidLpUqBwJkEAt/assets/static/optimized/rev-5916892/wp-content/uploads/2022/01/hero-video.mp4" type="video/mp4">
             </video>
-            <div class="absolute bottom-10 left-4 right-16 z-10">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold border border-white/20">A</div>
-                    <p class="font-bold">@Asheesh_Kumar</p>
-                </div>
-                <p class="text-sm opacity-90">Bhopal Content Creator System! 🚀 #Vactra</p>
+            <div class="absolute bottom-20 left-4">
+                <p class="font-bold text-lg">@Asheesh_Kumar</p>
+                <p class="text-sm opacity-80">Bhopal's Tech System! 🚀 #Vactra</p>
             </div>
-            <div class="absolute bottom-12 right-3 flex flex-col gap-6 text-center z-20">
-                <div onclick="likeVideo(this)" class="cursor-pointer">
-                    <i class="fas fa-heart text-2xl"></i>
-                    <p class="text-[10px] mt-1">12K</p>
-                </div>
-                <div><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px] mt-1">450</p></div>
-                <div><i class="fas fa-share text-2xl"></i><p class="text-[10px] mt-1">Share</p></div>
+            <div class="absolute bottom-24 right-4 flex flex-col gap-6 text-center">
+                <i class="fas fa-heart text-2xl" onclick="this.classList.toggle('text-red-500')"></i>
+                <i class="fas fa-comment-dots text-2xl"></i>
+                <i class="fas fa-share text-2xl"></i>
             </div>
         </div>
 
         <div class="video-card">
-            <video loop playsinline class="v-player" onclick="toggleMute(this)">
+            <video loop muted playsinline class="player">
                 <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-background-30232-large.mp4" type="video/mp4">
             </video>
-            <div class="absolute bottom-10 left-4 right-16 z-10">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-bold">V</div>
-                    <p class="font-bold">@Vactra_Flow</p>
-                </div>
-                <p class="text-sm opacity-90">Pharmacy meets Technology 🧬💻</p>
+            <div class="absolute bottom-20 left-4">
+                <p class="font-bold text-lg">@Vactra_Tech</p>
+                <p class="text-sm opacity-80">Future of AI Content 🧬</p>
             </div>
-            <div class="absolute bottom-12 right-3 flex flex-col gap-6 text-center z-20">
-                <div onclick="likeVideo(this)" class="cursor-pointer"><i class="fas fa-heart text-2xl"></i><p class="text-[10px] mt-1">8K</p></div>
-                <div><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px] mt-1">120</p></div>
-                <div><i class="fas fa-share text-2xl"></i><p class="text-[10px] mt-1">Share</p></div>
+            <div class="absolute bottom-24 right-4 flex flex-col gap-6 text-center">
+                <i class="fas fa-heart text-2xl" onclick="this.classList.toggle('text-red-500')"></i>
+                <i class="fas fa-comment-dots text-2xl"></i>
+                <i class="fas fa-share text-2xl"></i>
             </div>
         </div>
 
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-black border-t border-white/10 flex justify-around items-center py-4 z-50">
-        <i class="fas fa-home text-xl text-blue-500"></i>
-        <i class="fas fa-bolt text-xl text-gray-500"></i>
-        <div class="w-12 h-10 bg-white rounded-lg flex items-center justify-center text-black">
-            <i class="fas fa-plus text-xl"></i>
-        </div>
-        <i class="fas fa-layer-group text-xl text-gray-500"></i>
-        <i class="fas fa-user-circle text-xl text-gray-500"></i>
+    <nav class="fixed bottom-0 w-full bg-black/90 flex justify-around items-center py-5 border-t border-white/10 z-50">
+        <i class="fas fa-home text-blue-500 text-xl"></i>
+        <i class="fas fa-compass text-gray-500 text-xl"></i>
+        <div class="bg-white text-black px-4 py-1 rounded-md font-bold text-xl">+</div>
+        <i class="fas fa-comment text-gray-500 text-xl"></i>
+        <i class="fas fa-user text-gray-500 text-xl"></i>
     </nav>
 
     <script>
-        // Toggle Sound on Click
-        function toggleMute(video) {
-            video.muted = !video.muted;
-            if(!video.muted) video.play();
-        }
-
-        // Like Button Interaction
-        function likeVideo(element) {
-            const icon = element.querySelector('i');
-            icon.classList.toggle('like-active');
-            icon.classList.toggle('fas'); // Solid heart
-            icon.classList.toggle('far'); // Outline heart
-        }
-
-        // Auto Play/Pause on Scroll
+        // Automatic Play/Pause on Scroll
+        const videos = document.querySelectorAll('.player');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
-                    video.play();
+                    entry.target.play();
                 } else {
-                    video.pause();
+                    entry.target.pause();
                 }
             });
-        }, { threshold: 0.5 });
+        }, { threshold: 0.7 });
 
-        document.querySelectorAll('.video-card').forEach(card => {
-            observer.observe(card);
-        });
+        videos.forEach(v => observer.observe(v));
+
+        // Click to play first video (Browser Policy Fix)
+        window.addEventListener('click', () => {
+            videos[0].play();
+        }, { once: true });
     </script>
-
 </body>
 </html>
