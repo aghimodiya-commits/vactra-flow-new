@@ -7,75 +7,77 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: sans-serif; }
+        body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
         video { width: 100%; height: 100%; object-fit: cover; }
+        .overlay { background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 40%); }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 w-full p-4 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent z-50">
-        <h1 class="text-2xl font-bold text-blue-500 italic tracking-tighter">VFlow</h1>
-        <div class="flex gap-4 text-xl">
+    <header class="fixed top-0 w-full p-6 flex justify-between items-center z-50">
+        <h1 class="text-3xl font-extrabold text-blue-500 italic tracking-tighter">VFlow</h1>
+        <div class="flex gap-6 text-2xl">
             <i class="fas fa-search"></i>
             <i class="fas fa-camera"></i>
         </div>
     </header>
 
-    <main class="feed" id="mainFeed">
+    <main class="feed">
         <div class="card">
             <video loop playsinline autoplay muted>
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-dancing-2322-large.mp4" type="video/mp4">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-circuit-board-of-a-computer-436-large.mp4" type="video/mp4">
             </video>
+            <div class="overlay absolute inset-0"></div>
             <div class="absolute bottom-24 left-4 z-10">
-                <p class="font-bold">@Asheesh_Kumar</p>
-                <p class="text-sm">Bhopal Content Creator System! 🚀 #Vactra</p>
+                <p class="font-bold text-lg">@Vactra_Tech</p>
+                <p class="text-sm">Future of AI Content 🧬 #VactraFlow</p>
             </div>
-            <div class="absolute bottom-28 right-4 flex flex-col gap-6 text-center">
-                <div class="flex flex-col"><i class="fas fa-heart text-2xl text-white"></i><span class="text-xs">12K</span></div>
-                <div class="flex flex-col"><i class="fas fa-comment-dots text-2xl text-white"></i><span class="text-xs">450</span></div>
-                <i class="fas fa-share text-2xl"></i>
+            <div class="absolute bottom-32 right-4 flex flex-col gap-8 text-center">
+                <div class="group"><i class="fas fa-heart text-3xl hover:text-red-500 transition-colors"></i><p class="text-xs mt-1">15K</p></div>
+                <div><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs mt-1">800</p></div>
+                <i class="fas fa-share text-3xl"></i>
             </div>
         </div>
 
         <div class="card">
             <video loop playsinline muted>
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-neon-lights-2313-large.mp4" type="video/mp4">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4" type="video/mp4">
             </video>
+            <div class="overlay absolute inset-0"></div>
             <div class="absolute bottom-24 left-4 z-10">
-                <p class="font-bold">@Vactra_Flow</p>
-                <p class="text-sm">New App Interface Testing! 🔥</p>
+                <p class="font-bold text-lg">@Asheesh_Kumar</p>
+                <p class="text-sm">Bhopal System! Tap for sound 🍎🔥 #VactraFlow</p>
             </div>
-            <div class="absolute bottom-28 right-4 flex flex-col gap-6 text-center">
-                <div class="flex flex-col"><i class="fas fa-heart text-2xl text-white"></i><span class="text-xs">8K</span></div>
-                <div class="flex flex-col"><i class="fas fa-comment-dots text-2xl text-white"></i><span class="text-xs">120</span></div>
-                <i class="fas fa-share text-2xl"></i>
+            <div class="absolute bottom-32 right-4 flex flex-col gap-8 text-center">
+                <div class="group"><i class="fas fa-heart text-3xl hover:text-red-500 transition-colors"></i><p class="text-xs mt-1">22K</p></div>
+                <div><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs mt-1">1.2K</p></div>
+                <i class="fas fa-share text-3xl"></i>
             </div>
         </div>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-black/90 border-t border-white/10 flex justify-around items-center py-4 z-50">
-        <div class="flex flex-col items-center text-blue-500"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1">Home</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-bolt text-xl"></i><span class="text-[10px] mt-1">Shorts</span></div>
-        <div class="bg-white text-black px-4 py-1 rounded-lg font-bold text-2xl">+</div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-envelope text-xl"></i><span class="text-[10px] mt-1">Inbox</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-xl"></i><span class="text-[10px] mt-1">Profile</span></div>
+    <nav class="fixed bottom-0 w-full bg-black/95 border-t border-white/10 flex justify-around items-center py-4 z-50">
+        <div class="flex flex-col items-center text-blue-500"><i class="fas fa-home text-2xl"></i><span class="text-[10px] mt-1">Home</span></div>
+        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-bolt text-2xl"></i><span class="text-[10px] mt-1">Shorts</span></div>
+        <div class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl shadow-[0_0_15px_rgba(255,255,255,0.4)]">+</div>
+        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-bell text-2xl"></i><span class="text-[10px] mt-1">Inbox</span></div>
+        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-2xl"></i><span class="text-[10px] mt-1">Profile</span></div>
     </nav>
 
     <script>
-        // Intersection Observer to auto-play/pause videos on scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
-                    video.play();
+                    video.play().catch(() => {}); 
                 } else {
                     video.pause();
                 }
             });
-        }, { threshold: 0.7 });
+        }, { threshold: 0.6 });
 
         document.querySelectorAll('.card').forEach(card => observer.observe(card));
     </script>
