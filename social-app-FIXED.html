@@ -8,9 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: black; margin: 0; padding: 0; }
-        /* Professional Scrolling logic */
         .video-container {
-            height: calc(100vh - 140px); /* Adjusting for header/footer */
+            height: calc(100vh - 145px);
             scroll-snap-type: y mandatory;
             overflow-y: scroll;
             scrollbar-width: none;
@@ -23,8 +22,9 @@
             position: relative;
             background: #000;
         }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        /* Mobile-friendly responsive iframe */
+        iframe { width: 100%; height: 100%; border: none; }
+        .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.9); }
     </style>
 </head>
 <body class="text-white font-sans overflow-hidden">
@@ -48,43 +48,56 @@
     <main class="video-container">
         
         <div class="video-card">
-            <video loop autoplay muted playsinline>
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-low-angle-shot-4725-large.mp4" type="video/mp4">
-            </video>
+            <iframe 
+                src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&loop=1&playlist=jfKfPfyJRdk&controls=0" 
+                allow="autoplay; encrypted-media">
+            </iframe>
             
-            <div class="absolute bottom-10 left-4 right-16 z-30">
+            <div class="absolute bottom-10 left-4 right-16 z-30 pointer-events-none">
                 <div class="flex items-center gap-2 mb-3">
                     <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center font-bold border-2 border-white">A</div>
-                    <p class="font-bold text-lg text-shadow">@Asheesh_Kumar</p>
-                    <button class="bg-white text-black px-4 py-1 rounded-full text-xs font-bold ml-2 shadow-md">SUBSCRIBE</button>
+                    <p class="font-bold text-shadow">@Asheesh_Kumar</p>
+                    <button class="bg-white text-black px-4 py-1 rounded-full text-[10px] font-bold ml-2 shadow-md pointer-events-auto">SUBSCRIBE</button>
                 </div>
-                <p class="text-sm text-shadow">Vactra Flow: Ab Bhopal mein bhi system phadega! 🍎🔥</p>
+                <p class="text-sm text-shadow line-clamp-2">System phad video loading... 🍎🔥 #Bhopal #VactraFlow</p>
             </div>
 
             <div class="absolute bottom-12 right-3 flex flex-col gap-6 text-center z-40">
                 <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full bg-black/40 backdrop-blur-lg flex items-center justify-center border border-white/20"><i class="fas fa-thumbs-up text-xl"></i></div>
-                    <span class="text-[11px] mt-1 font-bold">12K</span>
+                    <div class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20"><i class="fas fa-heart text-xl text-red-500"></i></div>
+                    <span class="text-[10px] mt-1 font-bold">12K</span>
                 </div>
                 <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full bg-black/40 backdrop-blur-lg flex items-center justify-center border border-white/20"><i class="fas fa-comment-dots text-xl"></i></div>
-                    <span class="text-[11px] mt-1 font-bold">890</span>
+                    <div class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20"><i class="fas fa-comment-dots text-xl"></i></div>
+                    <span class="text-[10px] mt-1 font-bold">890</span>
                 </div>
                 <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full bg-black/40 backdrop-blur-lg flex items-center justify-center border border-white/20"><i class="fas fa-share text-xl"></i></div>
-                    <span class="text-[11px] mt-1 font-bold">Share</span>
+                    <div class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/20"><i class="fas fa-share text-xl"></i></div>
+                    <span class="text-[10px] mt-1 font-bold">Share</span>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800 flex justify-around items-center py-5 z-50">
-        <div class="text-blue-500 text-center"><i class="fas fa-home text-2xl"></i></div>
-        <div class="text-gray-500 text-center"><i class="fas fa-bolt text-2xl"></i></div>
-        <div class="text-white scale-150 relative -top-2"><i class="fas fa-plus-circle text-3xl"></i></div>
-        <div class="text-gray-500 text-center"><i class="fas fa-layer-group text-2xl"></i></div>
-        <div class="text-gray-500 text-center"><i class="fas fa-user-circle text-2xl"></i></div>
+    <nav class="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800 flex justify-around items-center py-4 z-50">
+        <div class="text-blue-500 text-center flex flex-col items-center gap-1">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-[9px]">Home</span>
+        </div>
+        <div class="text-gray-500 text-center flex flex-col items-center gap-1">
+            <i class="fas fa-bolt text-xl"></i>
+            <span class="text-[9px]">Shorts</span>
+        </div>
+        <div class="text-white scale-125"><i class="fas fa-plus-circle text-2xl"></i></div>
+        <div class="text-gray-500 text-center flex flex-col items-center gap-1">
+            <i class="fas fa-layer-group text-xl"></i>
+            <span class="text-[9px]">Library</span>
+        </div>
+        <div class="text-gray-500 text-center flex flex-col items-center gap-1">
+            <i class="fas fa-user-circle text-xl"></i>
+            <span class="text-[9px]">You</span>
+        </div>
     </nav>
 
 </body>
