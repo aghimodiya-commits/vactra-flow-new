@@ -1,37 +1,79 @@
-    <main class="h-[calc(100vh-130px)] overflow-y-scroll snap-y snap-mandatory bg-black">
-        
-        <div class="h-full w-full snap-start relative flex flex-col items-center justify-center bg-black">
-            <iframe 
-                class="w-full h-full pointer-events-none" 
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&controls=0&loop=1&playlist=dQw4w9WgXcQ" 
-                frameborder="0" 
-                allow="autoplay; encrypted-media" 
-                allowfullscreen>
-            </iframe>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vactra Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .video-container {
+            height: calc(100vh - 135px);
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            scrollbar-width: none;
+        }
+        .video-container::-webkit-scrollbar { display: none; }
+        .video-card {
+            scroll-snap-align: start;
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-sans overflow-hidden">
 
-            <div class="absolute bottom-6 left-4 right-16 pointer-events-none">
+    <header class="p-3 flex justify-between items-center bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(45deg, #ff4b2b, #ff416c, #8e2de2);">
+                 <svg width="25" height="25" viewBox="0 0 512 512" fill="white"><path d="M388.53 253.33c-.53-67.73 55.47-100.27 58.13-101.87-31.47-45.87-80-52.27-97.07-52.8-41.07-4.27-80 24-100.8 24-20.8 0-52.8-23.47-87.47-22.93-45.33.53-87.47 26.13-110.4 66.13-46.93 81.07-12 201.07 33.6 266.67 22.4 32.53 48.53 68.8 84.27 68.8 34.13 0 47.47-21.33 88.53-21.33 41.6 0 53.33 21.33 89.6 21.33 36.8 0 60.27-32.53 82.67-65.07 25.6-37.33 36.27-73.6 36.8-75.2-.53-.53-71.47-27.2-72.53-108.53zM326.93 72c18.67-22.4 31.47-53.87 28-85.33-27.2 1.07-60.27 18.13-79.47 40.53-17.6 20.27-32.53 52.8-28.53 83.2 30.4 2.13 61.33-16 80-38.4z"/></svg>
+            </div>
+            <h1 class="text-xl font-bold tracking-tighter">Vactra <span class="text-blue-400">Flow</span></h1>
+        </div>
+        <div class="flex gap-4 text-xl text-gray-300 pr-2"><i class="fas fa-search"></i><i class="fas fa-ellipsis-v"></i></div>
+    </header>
+
+    <main class="video-container">
+        
+        <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/S769v7I27G8?autoplay=1&mute=1&loop=1&playlist=S769v7I27G8" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+            <div class="absolute bottom-6 left-4 right-16">
                 <div class="flex items-center gap-2 mb-3">
-                    <div class="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center font-bold border border-white/20">A</div>
-                    <p class="font-bold text-shadow">@Asheesh_Kumar</p>
+                    <div class="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center font-bold">A</div>
+                    <p class="font-bold">@Asheesh_Kumar</p>
                     <button class="bg-white text-black px-4 py-1 rounded-full text-xs font-bold ml-2">SUBSCRIBE</button>
                 </div>
-                <p class="text-sm text-gray-100 text-shadow">Vactra Flow par pehli video! 🍎🔥 #Shorts #Tech</p>
+                <p class="text-sm">Vactra Flow App Launch! 🍎🔥</p>
             </div>
+        </div>
 
-            <div class="absolute bottom-10 right-3 flex flex-col gap-6 text-center">
-                <div class="flex flex-col items-center">
-                    <div class="w-11 h-11 rounded-full bg-gray-800/40 backdrop-blur-md flex items-center justify-center border border-white/10"><i class="fas fa-thumbs-up text-xl"></i></div>
-                    <span class="text-[10px] mt-1 font-bold">1.2K</span>
+        <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/6u_6-yY06r8?autoplay=0&mute=1&loop=1&playlist=6u_6-yY06r8" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+            <div class="absolute bottom-6 left-4 right-16">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xs">V</div>
+                    <p class="font-bold">@Vactra_Creations</p>
+                    <button class="bg-red-600 px-4 py-1 rounded-full text-xs font-bold ml-2">SUBSCRIBE</button>
                 </div>
-                <div class="flex flex-col items-center">
-                    <div class="w-11 h-11 rounded-full bg-gray-800/40 backdrop-blur-md flex items-center justify-center border border-white/10"><i class="fas fa-comment-dots text-xl"></i></div>
-                    <span class="text-[10px] mt-1 font-bold">45</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="w-11 h-11 rounded-full bg-gray-800/40 backdrop-blur-md flex items-center justify-center border border-white/10"><i class="fas fa-share text-xl"></i></div>
-                    <span class="text-[10px] mt-1 font-bold">Share</span>
-                </div>
+                <p class="text-sm">New AI Tech in Bhopal! 🚀</p>
             </div>
         </div>
 
     </main>
+
+    <nav class="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800 flex justify-around items-center py-4 z-50">
+        <div class="text-blue-500 text-center"><i class="fas fa-home text-xl"></i></div>
+        <div class="text-gray-500 text-center"><i class="fas fa-bolt text-xl"></i></div>
+        <div class="text-white scale-150"><i class="fas fa-plus-circle text-2xl"></i></div>
+        <div class="text-gray-500 text-center"><i class="fas fa-layer-group text-xl"></i></div>
+        <div class="text-gray-500 text-center"><i class="fas fa-user-circle text-xl"></i></div>
+    </nav>
+
+</body>
+</html>
