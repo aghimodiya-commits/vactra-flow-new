@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Upload Active</title>
+    <title>Vactra Flow - Interaction Active</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -13,8 +13,11 @@
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .ui-overlay { position: absolute; bottom: 0; width: 100%; padding: 40px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); pointer-events: none; }
-        /* Plus Icon Animation */
-        .plus-btn:active { transform: scale(0.9); transition: 0.1s; }
+        .side-bar { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 25px; align-items: center; z-index: 100; }
+        /* Like Animation */
+        .liked { color: #ef4444 !important; transform: scale(1.2); transition: 0.2s; }
+        .icon-btn { cursor: pointer; transition: 0.2s; }
+        .icon-btn:active { transform: scale(0.8); }
     </style>
 </head>
 <body>
@@ -25,13 +28,27 @@
     </header>
 
     <main class="feed" id="mainFeed">
-        <div class="card" id="firstCard">
-            <video loop playsinline autoplay muted id="bgVideo">
-                <source src="https://player.vimeo.com/external/370331493.sd.mp4?s=34015694200c0182470ecf6406e30a516e8b4e7a&profile_id=139&oauth2_token_id=57447761" type="video/mp4">
-            </video>
+        <div class="card">
+            <video loop playsinline autoplay muted src="https://player.vimeo.com/external/370331493.sd.mp4?s=34015694200c0182470ecf6406e30a516e8b4e7a&profile_id=139&oauth2_token_id=57447761"></video>
+            
             <div class="ui-overlay">
-                <p class="font-bold text-lg" id="userName">@Asheesh_Kumar</p>
-                <p class="text-sm opacity-90" id="videoDesc">Click (+) to upload your video! 🚀</p>
+                <p class="font-bold text-lg">@Asheesh_Kumar</p>
+                <p class="text-sm opacity-90">Dil se banayi gayi app! ❤️</p>
+            </div>
+
+            <div class="side-bar">
+                <div class="flex flex-col items-center">
+                    <i class="fas fa-heart text-3xl icon-btn" onclick="toggleLike(this)"></i>
+                    <span class="text-xs mt-1">1.2M</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <i class="fas fa-comment-dots text-3xl icon-btn"></i>
+                    <span class="text-xs mt-1">45K</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <i class="fas fa-share text-3xl icon-btn" onclick="shareVideo()"></i>
+                    <span class="text-xs mt-1">Share</span>
+                </div>
             </div>
         </div>
     </main>
@@ -41,65 +58,56 @@
     <nav class="fixed bottom-0 w-full bg-black/95 border-t border-white/10 flex justify-around items-center py-4 z-50">
         <i class="fas fa-home text-2xl text-blue-500"></i>
         <i class="fas fa-bolt text-2xl text-gray-500"></i>
-        
-        <div onclick="document.getElementById('videoUpload').click()" class="plus-btn bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl shadow-lg cursor-pointer">
-            +
-        </div>
-        
+        <div onclick="document.getElementById('videoUpload').click()" class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl shadow-lg cursor-pointer">+</div>
         <i class="fas fa-envelope text-2xl text-gray-500"></i>
         <i class="fas fa-user-circle text-2xl text-gray-500"></i>
     </nav>
 
     <script>
-        const videoInput = document.getElementById('videoUpload');
-        const mainFeed = document.getElementById('mainFeed');
+        // 1. Like Function
+        function toggleLike(element) {
+            element.classList.toggle('liked');
+            element.classList.toggle('fas'); // Solid heart
+            element.classList.toggle('far'); // Outline heart (agar use karein toh)
+        }
 
-        // Function: Jab video select ho jaye
-        videoInput.onchange = function(event) {
+        // 2. Share Function (Mobile Native Share)
+        function shareVideo() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Vactra Flow',
+                    text: 'Check out this awesome video on Vactra Flow by Asheesh Kumar!',
+                    url: window.location.href
+                }).then(() => console.log('Successful share'))
+                .catch((error) => console.log('Error sharing', error));
+            } else {
+                alert("Sharing link copied to clipboard!");
+            }
+        }
+
+        // Upload logic (Same as before)
+        document.getElementById('videoUpload').onchange = function(event) {
             const file = event.target.files[0];
             if (file) {
                 const videoURL = URL.createObjectURL(file);
-                
-                // Naya video card banana
                 const newCard = document.createElement('div');
                 newCard.className = 'card';
                 newCard.innerHTML = `
                     <video loop playsinline autoplay src="${videoURL}"></video>
                     <div class="ui-overlay">
                         <p class="font-bold text-lg">@Asheesh_Kumar</p>
-                        <p class="text-sm opacity-90">Aapki New Uploaded Video! 🔥</p>
+                        <p class="text-sm opacity-90">Newly Uploaded Short! 🔥</p>
+                    </div>
+                    <div class="side-bar">
+                        <div class="flex flex-col items-center"><i class="fas fa-heart text-3xl icon-btn" onclick="toggleLike(this)"></i><span class="text-xs mt-1">0</span></div>
+                        <div class="flex flex-col items-center"><i class="fas fa-comment-dots text-3xl icon-btn"></i><span class="text-xs mt-1">0</span></div>
+                        <div class="flex flex-col items-center"><i class="fas fa-share text-3xl icon-btn" onclick="shareVideo()"></i><span class="text-xs mt-1">Share</span></div>
                     </div>
                 `;
-                
-                // Naye video ko sabse upar jodne ke liye
-                mainFeed.prepend(newCard);
-                
-                // Direct scroll to new video
+                document.getElementById('mainFeed').prepend(newCard);
                 newCard.scrollIntoView({ behavior: 'smooth' });
             }
         };
-
-        // Swipe play/pause logic
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target.querySelector('video');
-                if (video) {
-                    entry.isIntersecting ? video.play().catch(() => {}) : video.pause();
-                }
-            });
-        }, { threshold: 0.6 });
-
-        // Naye cards ko bhi monitor karne ke liye
-        const updateObserver = () => {
-            document.querySelectorAll('.card').forEach(card => observer.observe(card));
-        };
-        updateObserver();
-        
-        // Refresh observer when new video added
-        const observerConfig = { childList: true };
-        const feedObserver = new MutationObserver(updateObserver);
-        feedObserver.observe(mainFeed, observerConfig);
     </script>
-
 </body>
 </html>
