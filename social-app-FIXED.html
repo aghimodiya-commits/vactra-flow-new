@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Profile Active</title>
+    <title>Vactra Flow - Final Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: sans-serif; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; }
+        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
         video { width: 100%; height: 100%; object-fit: cover; }
         
         /* Profile Page Styling */
@@ -19,11 +19,11 @@
             background: #000; z-index: 1000; display: none; overflow-y: auto;
         }
         .profile-header { background: linear-gradient(to bottom, #1e3a8a, #000); padding: 40px 20px; text-align: center; }
-        .profile-pic { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #3b82f6; margin: 0 auto; object-fit: cover; }
+        .profile-pic { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #3b82f6; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: #333; }
         .stats-box { display: flex; justify-content: space-around; padding: 20px 0; border-bottom: 1px solid #222; }
         .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
         .grid-item { aspect-ratio: 9/16; background: #111; overflow: hidden; }
-        .grid-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        .grid-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
     </style>
 </head>
 <body>
@@ -31,59 +31,75 @@
     <main class="feed" id="mainFeed">
         <div class="card">
             <video loop playsinline autoplay muted src="https://player.vimeo.com/external/370331493.sd.mp4?s=34015694200c0182470ecf6406e30a516e8b4e7a&profile_id=139&oauth2_token_id=57447761"></video>
-            <div class="absolute bottom-24 left-4 p-4">
+            <div class="absolute bottom-24 left-4 p-4 pointer-events-none">
                 <p class="font-bold text-lg">@Asheesh_Kumar</p>
-                <p class="text-sm">Bhopal, MP 📍 | Pharmacy Student 💊</p>
+                <p class="text-sm opacity-80">Bhopal ka apna platform! 🍎🚀</p>
             </div>
         </div>
     </main>
 
     <div id="profilePage">
-        <div class="p-4 flex items-center gap-4">
-            <i class="fas fa-arrow-left text-xl" onclick="closeProfile()"></i>
+        <div class="p-4 flex items-center gap-4 bg-black">
+            <i class="fas fa-arrow-left text-xl cursor-pointer" onclick="closeProfile()"></i>
             <span class="font-bold">Asheesh_Kumar</span>
         </div>
-        
         <div class="profile-header">
-            <div class="profile-pic bg-gray-700 flex items-center justify-center">
-                <i class="fas fa-user text-4xl text-gray-400"></i>
-            </div>
+            <div class="profile-pic"><i class="fas fa-user text-4xl text-gray-400"></i></div>
             <h2 class="mt-4 text-xl font-bold">Asheesh Kumar</h2>
             <p class="text-gray-400 text-sm">Pharmacy Student | Content Creator</p>
-            <button class="mt-4 bg-blue-600 px-8 py-2 rounded-full font-bold">Follow</button>
+            <button class="mt-4 bg-blue-600 px-8 py-2 rounded-full font-bold active:scale-95 transition">Follow</button>
         </div>
-
         <div class="stats-box">
             <div class="text-center"><p class="font-bold">128</p><p class="text-xs text-gray-500">Following</p></div>
             <div class="text-center"><p class="font-bold">45.2K</p><p class="text-xs text-gray-500">Followers</p></div>
             <div class="text-center"><p class="font-bold">1.2M</p><p class="text-xs text-gray-500">Likes</p></div>
         </div>
-
         <div class="video-grid">
-            <div class="grid-item"><img src="https://picsum.photos/200/300?random=1"></div>
-            <div class="grid-item"><img src="https://picsum.photos/200/300?random=2"></div>
-            <div class="grid-item"><img src="https://picsum.photos/200/300?random=3"></div>
-            <div class="grid-item"><img src="https://picsum.photos/200/300?random=4"></div>
-            <div class="grid-item"><img src="https://picsum.photos/200/300?random=5"></div>
-            <div class="grid-item"><img src="https://picsum.photos/200/300?random=6"></div>
+            <div class="grid-item"><img src="https://picsum.photos/200/300?v=1"></div>
+            <div class="grid-item"><img src="https://picsum.photos/200/300?v=2"></div>
+            <div class="grid-item"><img src="https://picsum.photos/200/300?v=3"></div>
         </div>
     </div>
 
-    <nav class="fixed bottom-0 w-full bg-black border-t border-white/10 flex justify-around items-center py-4 z-50">
-        <i class="fas fa-home text-2xl text-blue-500" onclick="closeProfile()"></i>
+    <input type="file" id="videoUpload" accept="video/*" style="display: none;">
+
+    <nav class="fixed bottom-0 w-full bg-black border-t border-white/10 flex justify-around items-center py-4 z-[2000]">
+        <i class="fas fa-home text-2xl text-blue-500 cursor-pointer" onclick="closeProfile()"></i>
         <i class="fas fa-bolt text-2xl text-gray-500"></i>
-        <div class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl">+</div>
+        <div onclick="triggerUpload()" class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl shadow-lg cursor-pointer active:scale-90 transition">+</div>
         <i class="fas fa-envelope text-2xl text-gray-500"></i>
-        <i class="fas fa-user-circle text-2xl text-gray-500" onclick="openProfile()"></i>
+        <i class="fas fa-user-circle text-2xl text-gray-500 cursor-pointer" onclick="openProfile()"></i>
     </nav>
 
     <script>
-        function openProfile() {
-            document.getElementById('profilePage').style.display = 'block';
+        // Profile Controls
+        function openProfile() { document.getElementById('profilePage').style.display = 'block'; }
+        function closeProfile() { document.getElementById('profilePage').style.display = 'none'; }
+
+        // Plus (+) Button Logic
+        function triggerUpload() {
+            closeProfile(); // Upload ke liye wapas main screen par laane ke liye
+            document.getElementById('videoUpload').click();
         }
-        function closeProfile() {
-            document.getElementById('profilePage').style.display = 'none';
-        }
+
+        // Upload functionality
+        document.getElementById('videoUpload').onchange = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const videoURL = URL.createObjectURL(file);
+                const newCard = document.createElement('div');
+                newCard.className = 'card';
+                newCard.innerHTML = `
+                    <video loop playsinline autoplay src="${videoURL}"></video>
+                    <div class="absolute bottom-24 left-4 p-4 pointer-events-none">
+                        <p class="font-bold text-lg">@Asheesh_Kumar</p>
+                        <p class="text-sm">Abhi upload kiya gaya! 🔥</p>
+                    </div>
+                `;
+                document.getElementById('mainFeed').prepend(newCard);
+                newCard.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
     </script>
 </body>
 </html>
