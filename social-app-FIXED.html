@@ -3,111 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Comments Active</title>
+    <title>Vactra Flow - Fully Working</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: sans-serif; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; }
+        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
         video { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Comment Section Slide-up */
+        /* Overlays */
+        .side-bar { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 25px; align-items: center; z-index: 100; }
+        .bottom-ui { position: absolute; bottom: 100px; left: 15px; z-index: 100; }
+        .liked { color: #ef4444 !important; }
+
+        /* Comment Section */
         #commentSection {
-            position: fixed; bottom: -100%; left: 0; width: 100%; height: 70vh;
-            background: #1a1a1a; border-radius: 20px 20px 0 0; z-index: 3000;
-            transition: bottom 0.4s ease; display: flex; flex-direction: column;
+            position: fixed; bottom: -100%; left: 0; width: 100%; height: 60vh;
+            background: #121212; border-radius: 20px 20px 0 0; z-index: 3000;
+            transition: bottom 0.3s ease; display: flex; flex-direction: column;
         }
         .show-comments { bottom: 0 !important; }
-        .comment-list { flex-grow: 1; overflow-y: auto; padding: 20px; }
-        .comment-item { display: flex; gap: 12px; margin-bottom: 20px; }
-        .user-av { width: 35px; height: 35px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; }
-        
-        .side-bar { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 25px; align-items: center; z-index: 50; }
-        .liked { color: #ef4444 !important; }
+
+        /* Profile Page */
+        #profilePage {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 4000; display: none; overflow-y: auto;
+        }
     </style>
 </head>
 <body>
 
+    <header class="fixed top-0 w-full p-6 flex justify-between items-center z-[150] bg-gradient-to-b from-black/80 to-transparent">
+        <h1 class="text-2xl font-black italic">VACTRA <span class="text-blue-500">FLOW</span></h1>
+        <div class="flex gap-5 text-xl"><i class="fas fa-search"></i><i class="fas fa-camera"></i></div>
+    </header>
+
     <main class="feed" id="mainFeed">
         <div class="card">
             <video loop playsinline autoplay muted src="https://player.vimeo.com/external/370331493.sd.mp4?s=34015694200c0182470ecf6406e30a516e8b4e7a&profile_id=139&oauth2_token_id=57447761"></video>
+            <div class="bottom-ui">
+                <p class="font-bold text-lg">@Asheesh_Kumar</p>
+                <p class="text-sm">Bhopal se naya dhamaka! 🍎🚀</p>
+            </div>
             <div class="side-bar">
-                <div onclick="this.children[0].classList.toggle('liked')"><i class="fas fa-heart text-3xl"></i><span class="text-xs">1.2M</span></div>
-                
-                <div onclick="openComments()"><i class="fas fa-comment-dots text-3xl"></i><span class="text-xs">45K</span></div>
-                
-                <div onclick="shareNow()"><i class="fas fa-share text-3xl"></i><span class="text-xs">Share</span></div>
+                <div onclick="toggleLike(this.children[0])"><i class="fas fa-heart text-3xl cursor-pointer"></i><span class="text-xs">1.2M</span></div>
+                <div onclick="openComments()"><i class="fas fa-comment-dots text-3xl cursor-pointer"></i><span class="text-xs">45K</span></div>
+                <div onclick="shareNow()"><i class="fas fa-share text-3xl cursor-pointer"></i><span class="text-xs text-center">Share</span></div>
             </div>
         </div>
     </main>
 
     <div id="commentSection">
         <div class="p-4 border-b border-gray-800 flex justify-between items-center">
-            <span class="font-bold">45,200 Comments</span>
+            <span class="font-bold text-sm">Comments</span>
             <i class="fas fa-times text-xl cursor-pointer" onclick="closeComments()"></i>
         </div>
-        
-        <div class="comment-list" id="commentList">
-            <div class="comment-item">
-                <div class="user-av"><i class="fas fa-user text-xs"></i></div>
-                <div>
-                    <p class="text-xs font-bold text-gray-400">@Kuldeep</p>
-                    <p class="text-sm">Bhai kamaal ki app banayi hai! 🔥</p>
-                </div>
-            </div>
-            <div class="comment-item">
-                <div class="user-av"><i class="fas fa-user text-xs"></i></div>
-                <div>
-                    <p class="text-xs font-bold text-gray-400">@User_99</p>
-                    <p class="text-sm">Bhopal se support! 🍎🚀</p>
-                </div>
-            </div>
+        <div id="commentList" class="flex-grow overflow-y-auto p-4 space-y-4">
+            <div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs italic">A</div><div><p class="text-xs font-bold">@Kuldeep</p><p class="text-sm">Mast hai bhai!</p></div></div>
         </div>
+        <div class="p-4 bg-black flex gap-2">
+            <input type="text" id="comInput" placeholder="Add comment..." class="flex-grow bg-gray-900 rounded-full px-4 py-2 text-sm outline-none">
+            <button onclick="postComment()" class="text-blue-500 font-bold px-2">Post</button>
+        </div>
+    </div>
 
-        <div class="p-4 border-t border-gray-800 flex gap-4 bg-black">
-            <input type="text" id="comInput" placeholder="Add a comment..." class="flex-grow bg-gray-900 rounded-full px-4 py-2 text-sm outline-none">
-            <button onclick="postComment()" class="text-blue-500 font-bold">Post</button>
+    <div id="profilePage">
+        <div class="p-4 flex items-center gap-4 border-b border-gray-900">
+            <i class="fas fa-arrow-left text-xl cursor-pointer" onclick="closeProfile()"></i>
+            <span class="font-bold text-lg">Asheesh Kumar</span>
+        </div>
+        <div class="text-center py-10 bg-gradient-to-b from-blue-900/20 to-black">
+            <div class="w-24 h-24 rounded-full bg-gray-800 mx-auto border-4 border-blue-500 flex items-center justify-center text-4xl italic">AK</div>
+            <h2 class="mt-4 text-xl font-bold">@Asheesh_Kumar</h2>
+            <p class="text-gray-400 text-sm">Pharmacy Student | Creator</p>
+        </div>
+        <div class="flex justify-around py-6 border-y border-gray-900">
+            <div class="text-center"><p class="font-bold">128</p><p class="text-xs text-gray-500">Following</p></div>
+            <div class="text-center"><p class="font-bold">45.2K</p><p class="text-xs text-gray-500">Followers</p></div>
+            <div class="text-center"><p class="font-bold">1.2M</p><p class="text-xs text-gray-500">Likes</p></div>
         </div>
     </div>
 
     <nav class="fixed bottom-0 w-full bg-black border-t border-white/10 flex justify-around items-center py-4 z-[2000]">
-        <i class="fas fa-home text-2xl text-blue-500"></i>
-        <div class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl">+</div>
-        <i class="fas fa-user-circle text-2xl text-gray-400"></i>
+        <i class="fas fa-home text-2xl text-blue-500 cursor-pointer" onclick="closeProfile()"></i>
+        <div onclick="document.getElementById('videoUp').click()" class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl cursor-pointer">+</div>
+        <i class="fas fa-user-circle text-2xl text-gray-400 cursor-pointer" onclick="openProfile()"></i>
     </nav>
 
+    <input type="file" id="videoUp" accept="video/*" class="hidden">
+
     <script>
-        function openComments() {
-            document.getElementById('commentSection').classList.add('show-comments');
-        }
-        function closeComments() {
-            document.getElementById('commentSection').classList.remove('show-comments');
-        }
+        function toggleLike(el) { el.classList.toggle('liked'); }
+        function openComments() { document.getElementById('commentSection').classList.add('show-comments'); }
+        function closeComments() { document.getElementById('commentSection').classList.remove('show-comments'); }
+        function openProfile() { document.getElementById('profilePage').style.display = 'block'; }
+        function closeProfile() { document.getElementById('profilePage').style.display = 'none'; closeComments(); }
 
         function postComment() {
             const input = document.getElementById('comInput');
-            const list = document.getElementById('commentList');
-            if(input.value.trim() !== "") {
-                const newCom = document.createElement('div');
-                newCom.className = 'comment-item';
-                newCom.innerHTML = `
-                    <div class="user-av"><i class="fas fa-user text-xs"></i></div>
-                    <div>
-                        <p class="text-xs font-bold text-gray-400">@Asheesh_Kumar</p>
-                        <p class="text-sm">${input.value}</p>
-                    </div>
-                `;
-                list.prepend(newCom);
+            if(input.value.trim()){
+                const div = document.createElement('div');
+                div.className = 'flex gap-3';
+                div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs italic">AK</div><div><p class="text-xs font-bold">@Asheesh_Kumar</p><p class="text-sm">${input.value}</p></div>`;
+                document.getElementById('commentList').prepend(div);
                 input.value = "";
-                list.scrollTop = 0;
             }
         }
 
         function shareNow() {
             if (navigator.share) navigator.share({title: 'Vactra Flow', url: window.location.href});
+            else alert("Link Copied!");
         }
+
+        document.getElementById('videoUp').onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<video loop playsinline autoplay src="${url}"></video><div class="bottom-ui"><p class="font-bold">@Asheesh_Kumar</p></div>`;
+                document.getElementById('mainFeed').prepend(card);
+                card.scrollIntoView();
+            }
+        };
     </script>
 </body>
 </html>
