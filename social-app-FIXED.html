@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Permanent Save</title>
+    <title>Vactra Flow - YouTube Professional</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,103 +14,141 @@
         .feed::-webkit-scrollbar { display: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .sidebar { position: absolute; right: 12px; bottom: 150px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
-        .icon-box { text-align: center; cursor: pointer; }
-        .bottom-info { position: absolute; bottom: 110px; left: 15px; z-index: 1000; }
-        nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
-        #edit-screen { background: #0f0f0f; z-index: 6000; overflow-y: auto; }
+        
+        /* Sidebar Icons */
+        .sidebar { position: absolute; right: 12px; bottom: 150px; display: flex; flex-direction: column; gap: 20px; z-index: 1000; align-items: center; }
+        .icon-box { text-align: center; cursor: pointer; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .bottom-info { position: absolute; bottom: 110px; left: 15px; z-index: 1000; max-width: 75%; }
+        
+        /* YouTube Bottom Nav */
+        nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; cursor: pointer; }
+        .nav-item.active-nav { color: white; }
+
+        /* Edit Details Screen */
+        #edit-screen { background: #0f0f0f; z-index: 6000; overflow-y: auto; padding-bottom: 80px; }
         input, textarea { background: #222; border: 1px solid #333; border-radius: 8px; padding: 12px; color: white; width: 100%; margin-bottom: 15px; outline: none; }
     </style>
 </head>
 <body>
 
     <div id="home-screen" class="screen active">
-        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
+        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
             <h1 class="text-xl font-black italic tracking-tighter uppercase">VACTRA <span class="text-red-600">FLOW</span></h1>
+            <div class="flex gap-5 text-lg"><i class="fas fa-search"></i><i class="fas fa-camera"></i></div>
         </header>
-        <div class="feed" id="mainFeed"></div>
+        <div class="feed" id="mainFeed">
+            </div>
     </div>
 
     <div id="edit-screen" class="screen">
-        <div class="p-4 flex items-center justify-between border-b border-zinc-800">
+        <div class="p-4 flex items-center justify-between border-b border-zinc-800 sticky top-0 bg-black z-20">
             <i class="fas fa-times text-xl cursor-pointer" onclick="showScreen('home-screen')"></i>
-            <span class="font-bold">Add Details</span>
-            <button onclick="publishVideo()" class="bg-red-600 px-6 py-1.5 rounded-full font-bold text-sm">Publish</button>
+            <span class="font-bold">Add details</span>
+            <button onclick="publishVideo()" class="bg-blue-600 px-6 py-1.5 rounded-full font-bold text-sm">Upload</button>
         </div>
-        <div class="p-5 text-center">
+        <div class="p-5">
             <div id="preview-area" class="w-full aspect-video bg-zinc-900 rounded-lg mb-6 flex items-center justify-center overflow-hidden border border-zinc-700"></div>
+            <label class="text-xs text-gray-400 ml-1">Title</label>
             <input type="text" id="vTitle" placeholder="Video Title...">
-            <textarea id="vDesc" rows="2" placeholder="Description..."></textarea>
+            <label class="text-xs text-gray-400 ml-1">Description</label>
+            <textarea id="vDesc" rows="3" placeholder="Description..."></textarea>
         </div>
     </div>
 
+    <div id="profile-screen" class="screen bg-black pt-20 px-6 text-center">
+        <div class="w-24 h-24 bg-blue-900 rounded-full border-2 border-blue-500 mx-auto flex items-center justify-center text-3xl font-bold">AK</div>
+        <h2 class="mt-4 text-2xl font-bold">Asheesh Kumar</h2>
+        <p class="text-gray-400">Pharmacy Student | Bhopal</p>
+        <div class="flex justify-center gap-10 mt-8">
+            <div><p class="font-bold">45.2K</p><p class="text-xs text-gray-500">Followers</p></div>
+            <div><p class="font-bold">1.2M</p><p class="text-xs text-gray-500">Likes</p></div>
+        </div>
+        <button class="mt-8 bg-zinc-800 w-full py-2 rounded-md font-bold">Edit Profile</button>
+    </div>
+
     <nav>
-        <div onclick="showScreen('home-screen')"><i class="fas fa-home text-xl"></i></div>
-        <div onclick="document.getElementById('fileInput').click()" class="text-3xl font-bold">+</div>
-        <div onclick="alert('Profile Page Coming Soon!')"><i class="fas fa-user-circle text-xl"></i></div>
+        <div class="nav-item active-nav" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl mb-1"></i><span>Home</span></div>
+        <div class="nav-item" onclick="showScreen('home-screen')"><i class="fas fa-play-circle text-xl mb-1"></i><span>Shorts</span></div>
+        <div onclick="document.getElementById('fileInput').click()" class="text-4xl font-light cursor-pointer">+</div>
+        <div class="nav-item"><i class="fas fa-layer-group text-xl mb-1"></i><span>Subs</span></div>
+        <div class="nav-item" onclick="showScreen('profile-screen')"><i class="fas fa-user-circle text-xl mb-1"></i><span>You</span></div>
     </nav>
 
     <input type="file" id="fileInput" accept="video/*" class="hidden">
 
     <script>
-        let tempVideoURL = "";
+        let currentVideoURL = "";
+
+        // --- PAGE LOAD LOGIC (Save Feature) ---
+        window.onload = function() {
+            const saved = JSON.parse(localStorage.getItem('vactra_storage')) || [];
+            saved.forEach(video => {
+                renderVideo(video.url, video.title, video.desc);
+            });
+        };
 
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
-        // --- LOAD SAVED VIDEOS ON START ---
-        window.onload = function() {
-            const savedVideos = JSON.parse(localStorage.getItem('vactra_db')) || [];
-            savedVideos.forEach(v => addVideoToFeed(v.url, v.title, v.desc));
-        };
-
+        // --- UPLOAD LOGIC ---
         document.getElementById('fileInput').onchange = function(e) {
             const file = e.target.files[0];
             if (file) {
-                tempVideoURL = URL.createObjectURL(file);
-                document.getElementById('preview-area').innerHTML = `<video class="w-full h-full object-contain" src="${tempVideoURL}" muted autoplay loop></video>`;
+                currentVideoURL = URL.createObjectURL(file);
+                document.getElementById('preview-area').innerHTML = `<video class="w-full h-full object-contain" src="${currentVideoURL}" muted autoplay loop></video>`;
                 showScreen('edit-screen');
             }
         };
 
         function publishVideo() {
-            const title = document.getElementById('vTitle').value || "New Video";
+            const title = document.getElementById('vTitle').value || "Vactra Flow Video";
             const desc = document.getElementById('vDesc').value || "";
             
             // 1. Screen par dikhao
-            addVideoToFeed(tempVideoURL, title, desc);
+            renderVideo(currentVideoURL, title, desc);
 
-            // 2. LocalStorage mein save karo (Permanent)
-            const videoObj = { url: tempVideoURL, title: title, desc: desc };
-            let db = JSON.parse(localStorage.getItem('vactra_db')) || [];
-            db.unshift(videoObj);
-            localStorage.setItem('vactra_db', JSON.stringify(db));
+            // 2. LocalStorage mein save karo (Permanent Save)
+            const videoObj = { url: currentVideoURL, title: title, desc: desc };
+            let videos = JSON.parse(localStorage.getItem('vactra_storage')) || [];
+            videos.unshift(videoObj);
+            localStorage.setItem('vactra_storage', JSON.stringify(videos));
 
-            // Reset
+            // Reset inputs
             document.getElementById('vTitle').value = "";
             document.getElementById('vDesc').value = "";
             showScreen('home-screen');
-            alert("Bhai, Video live aur save ho gayi! 🔥");
+            alert("Bhai, Video Permanently Save ho gayi! 🔥");
         }
 
-        function addVideoToFeed(url, title, desc) {
+        // --- VIDEO RENDERING (Icons included) ---
+        function renderVideo(url, title, desc) {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
                 <video loop playsinline autoplay src="${url}"></video>
                 <div class="bottom-info">
                     <p class="font-bold text-md">@Asheesh_Kumar</p>
-                    <p class="text-sm font-semibold">${title}</p>
-                    <p class="text-xs opacity-70">${desc}</p>
+                    <p class="text-sm font-semibold mt-1">${title}</p>
+                    <p class="text-xs opacity-80">${desc}</p>
                 </div>
                 <div class="sidebar">
-                    <div class="icon-box" onclick="this.classList.toggle('text-red-500')"><i class="fas fa-heart text-2xl"></i><p class="text-[10px]">1.2M</p></div>
-                    <div class="icon-box" onclick="alert('Comment box opening...')"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px]">45K</p></div>
-                    <div class="icon-box" onclick="navigator.share ? navigator.share({title: '${title}', url: window.location.href}) : alert('Link Copied!')"><i class="fas fa-share text-2xl"></i><p class="text-[10px]">Share</p></div>
-                </div>`;
+                    <div class="icon-box" onclick="this.classList.toggle('text-red-600')"><i class="fas fa-thumbs-up text-2xl"></i><p class="text-[10px] mt-1">1.2M</p></div>
+                    <div class="icon-box" onclick="alert('Comment box opening...')"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px] mt-1">45K</p></div>
+                    <div class="icon-box" onclick="shareVideo('${title}')"><i class="fas fa-share text-2xl"></i><p class="text-[10px] mt-1">Share</p></div>
+                </div>
+            `;
             document.getElementById('mainFeed').prepend(card);
+        }
+
+        function shareVideo(title) {
+            if (navigator.share) {
+                navigator.share({ title: title, url: window.location.href });
+            } else {
+                alert("Link Copied!");
+            }
         }
     </script>
 </body>
