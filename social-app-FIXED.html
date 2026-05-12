@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - No Echo Edition</title>
+    <title>Vactra Flow - Professional Final</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -11,11 +11,13 @@
         .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
         .active { display: block; }
         
+        /* Feed - Snap scrolling for Shorts feel */
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
+        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
         
+        /* UI Elements */
         .sidebar { position: absolute; right: 12px; bottom: 160px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
         .icon-box { text-align: center; cursor: pointer; }
         .bottom-info { position: absolute; bottom: 120px; left: 15px; z-index: 1000; max-width: 80%; }
@@ -31,10 +33,10 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; cursor: pointer; }
         .active-nav { color: white; }
 
+        /* Editing Screen Styles */
         #edit-screen { background: #000; z-index: 6000; }
-        .edit-tools { position: absolute; bottom: 120px; width: 100%; display: flex; justify-content: space-around; padding: 10px; background: rgba(0,0,0,0.5); }
-        .tool-btn { display: flex; flex-direction: column; align-items: center; font-size: 11px; gap: 5px; color: white; }
-        
+        .edit-tools { position: absolute; bottom: 180px; width: 100%; display: flex; justify-content: space-around; padding: 10px; z-index: 20; }
+        .tool-btn { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: white; cursor: pointer; }
         .details-area { background: #0f0f0f; padding: 15px; border-radius: 15px 15px 0 0; position: absolute; bottom: 0; width: 100%; z-index: 10; }
         .input-group { background: #272727; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
         input, textarea { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 14px; }
@@ -43,20 +45,21 @@
 <body>
 
     <div id="home-screen" class="screen active">
-        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
+        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent text-white">
             <h1 class="text-xl font-black italic tracking-tighter uppercase">VACTRA <span class="text-red-600">FLOW</span></h1>
         </header>
-        <div class="feed" id="mainFeed"></div>
+        <div class="feed" id="mainFeed" onscroll="handleScroll()">
+            </div>
     </div>
 
     <div id="comment-panel">
-        <div class="p-4 border-b border-zinc-800 flex justify-between items-center">
+        <div class="p-4 border-b border-zinc-800 flex justify-between items-center text-white">
             <span class="font-bold text-lg">Comments</span>
             <i class="fas fa-times text-xl cursor-pointer" onclick="toggleComments()"></i>
         </div>
         <div id="comment-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
         <div class="p-3 border-t border-zinc-800 bg-zinc-900 flex items-center gap-3">
-            <input type="text" id="comment-input" placeholder="Add a comment..." class="flex-1 bg-zinc-800 rounded-full px-4 py-2 text-sm outline-none">
+            <input type="text" id="comment-input" placeholder="Add a comment..." class="flex-1 bg-zinc-800 rounded-full px-4 py-2 text-sm outline-none text-white">
             <button onclick="postComment()" class="text-blue-500 font-bold px-2">Post</button>
         </div>
     </div>
@@ -64,32 +67,43 @@
     <div id="edit-screen" class="screen">
         <div class="p-4 flex items-center justify-between sticky top-0 bg-black/50 z-20">
             <i class="fas fa-arrow-left text-xl cursor-pointer" onclick="showScreen('home-screen')"></i>
-            <span class="font-bold">Edit Video</span>
+            <span class="font-bold">Edit Short</span>
             <button onclick="publishVideo()" class="bg-white text-black px-5 py-1.5 rounded-full font-bold text-sm">Next</button>
         </div>
-        <div id="preview-box" class="w-full h-[60vh] bg-zinc-900 flex items-center justify-center overflow-hidden"></div>
+        <div id="preview-box" class="w-full h-[60vh] bg-zinc-900 flex items-center justify-center"></div>
+        
         <div class="edit-tools">
-            <div class="tool-btn"><i class="fas fa-music text-xl"></i><span>Sound</span></div>
-            <div class="tool-btn"><i class="fas fa-font text-xl"></i><span>Text</span></div>
-            <div class="tool-btn"><i class="fas fa-magic text-xl"></i><span>Filters</span></div>
+            <div class="tool-btn"><i class="fas fa-music text-xl mb-1"></i><span>Sound</span></div>
+            <div class="tool-btn"><i class="fas fa-font text-xl mb-1"></i><span>Text</span></div>
+            <div class="tool-btn"><i class="fas fa-magic text-xl mb-1"></i><span>Filters</span></div>
         </div>
+
         <div class="details-area">
             <div class="input-group"><input type="text" id="vTitle" placeholder="Caption your Short..."></div>
+            <div class="input-group"><textarea id="vDesc" rows="1" placeholder="Add description..."></textarea></div>
             <div class="input-group"><input type="text" id="vTags" placeholder="#Tags"></div>
         </div>
     </div>
 
     <div id="profile-screen" class="screen">
-        <div class="p-8 text-center mt-10">
-            <div class="w-20 h-20 bg-zinc-800 rounded-full mx-auto border-2 border-red-600 flex items-center justify-center text-2xl font-bold">AK</div>
-            <h2 class="mt-4 text-xl font-bold">Asheesh Kumar</h2>
-            <button class="mt-6 bg-zinc-900 px-6 py-2 rounded-lg text-sm" onclick="showScreen('home-screen')">Back to Feed</button>
+        <div class="p-4 border-b border-zinc-800 flex items-center"><i class="fas fa-arrow-left mr-4" onclick="showScreen('home-screen')"></i><span class="font-bold">You</span></div>
+        <div class="p-8 text-center">
+            <div class="w-24 h-24 bg-zinc-800 rounded-full mx-auto border-4 border-red-600 flex items-center justify-center text-3xl font-bold">AK</div>
+            <h2 class="mt-4 text-2xl font-bold text-white">Asheesh Kumar</h2>
+            <p class="text-gray-400">Pharmacy Student | Bhopal</p>
+            <div class="flex justify-around mt-8 bg-zinc-900 p-4 rounded-xl text-white">
+                <div><p class="font-bold">45K</p><p class="text-[10px] text-gray-500">Followers</p></div>
+                <div><p class="font-bold">1.2M</p><p class="text-[10px] text-gray-500">Likes</p></div>
+            </div>
+            <button class="w-full mt-6 bg-white text-black font-bold py-2 rounded-lg">Edit Profile</button>
         </div>
     </div>
 
     <nav>
         <div class="nav-item active-nav" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl mb-1"></i><span>Home</span></div>
-        <div onclick="document.getElementById('fileInput').click()" class="text-4xl font-light cursor-pointer">+</div>
+        <div class="nav-item" onclick="showScreen('home-screen')"><i class="fas fa-play-circle text-xl mb-1"></i><span>Shorts</span></div>
+        <div onclick="document.getElementById('fileInput').click()" class="text-4xl font-light cursor-pointer text-white">+</div>
+        <div class="nav-item"><i class="fas fa-layer-group text-xl mb-1"></i><span>Subs</span></div>
         <div class="nav-item" onclick="showScreen('profile-screen')"><i class="fas fa-user-circle text-xl mb-1"></i><span>You</span></div>
     </nav>
 
@@ -98,30 +112,34 @@
     <script>
         let currentUrl = "";
 
-        // Intersection Observer to stop double sound
-        const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target;
-                if (entry.isIntersecting) {
-                    video.play();
-                } else {
-                    video.pause();
-                    video.currentTime = 0; // Reset video
-                }
-            });
-        }, { threshold: 0.8 });
-
+        // --- LOAD DATA ---
         window.onload = function() {
             const saved = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
-            saved.forEach(v => renderVideo(v.url, v.title, v.tags));
+            saved.forEach(v => renderVideo(v.url, v.title, v.desc, v.tags));
+            handleScroll(); // Initial audio setup
         };
+
+        // --- SMART AUDIO CONTROL (Fix for Double Sound) ---
+        function handleScroll() {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(v => {
+                const rect = v.getBoundingClientRect();
+                // Agar video screen ke beech mein hai, to play karo, nahi to pause
+                if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+                    v.play();
+                } else {
+                    v.pause();
+                }
+            });
+        }
 
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            // Mute all videos when leaving home screen
             if(id !== 'home-screen') {
                 document.querySelectorAll('video').forEach(v => v.pause());
+            } else {
+                handleScroll();
             }
         }
 
@@ -135,12 +153,18 @@
             const input = document.getElementById('comment-input');
             if (input.value.trim() !== "") {
                 const div = document.createElement('div');
-                div.className = "flex gap-3";
-                div.innerHTML = `<div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-[10px] font-bold text-white">AK</div>
-                                <div><p class="text-xs font-bold text-gray-400">@Asheesh_Kumar</p><p class="text-sm text-white">${input.value}</p></div>`;
+                div.className = "flex gap-3 text-white";
+                div.innerHTML = `<div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-[10px] font-bold">AK</div>
+                                <div><p class="text-xs font-bold text-gray-400">@Asheesh_Kumar</p><p class="text-sm">${input.value}</p></div>`;
                 document.getElementById('comment-list').prepend(div);
                 input.value = "";
             }
+        }
+
+        function shareVideo(title) {
+            if (navigator.share) {
+                navigator.share({ title: title, url: window.location.href });
+            } else { alert("Link Copied! 🔥"); }
         }
 
         document.getElementById('fileInput').onchange = function(e) {
@@ -154,17 +178,17 @@
 
         function publishVideo() {
             const t = document.getElementById('vTitle').value || "New Short";
+            const d = document.getElementById('vDesc').value || "";
             const tags = document.getElementById('vTags').value || "";
-            renderVideo(currentUrl, t, tags);
-            
+            renderVideo(currentUrl, t, d, tags);
             const db = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
-            db.unshift({url: currentUrl, title: t, tags: tags});
+            db.unshift({url: currentUrl, title: t, desc: d, tags: tags});
             localStorage.setItem('vactra_pro_db', JSON.stringify(db));
-            
             showScreen('home-screen');
+            alert("Upload Successful! 🍎");
         }
 
-        function renderVideo(url, title, tags) {
+        function renderVideo(url, title, desc, tags) {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
@@ -177,11 +201,8 @@
                 <div class="sidebar">
                     <div class="icon-box" onclick="this.classList.toggle('text-red-500')"><i class="fas fa-heart text-2xl"></i><p class="text-[10px]">1.2M</p></div>
                     <div class="icon-box" onclick="toggleComments()"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px]">45K</p></div>
-                    <div class="icon-box" onclick="navigator.share({title: '${title}'})"><i class="fas fa-share text-2xl"></i><p class="text-[10px]">Share</p></div>
+                    <div class="icon-box" onclick="shareVideo('${title}')"><i class="fas fa-share text-2xl"></i><p class="text-[10px]">Share</p></div>
                 </div>`;
-            
-            const videoElem = card.querySelector('video');
-            videoObserver.observe(videoElem); // Start watching this video
             document.getElementById('mainFeed').prepend(card);
         }
     </script>
