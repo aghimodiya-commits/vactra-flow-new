@@ -3,150 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Final Version</title>
+    <title>Vactra Flow - Pro Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; margin: 0; color: white; font-family: sans-serif; overflow: hidden; }
-        .screen { height: 100vh; width: 100vw; display: none; position: relative; }
+        body { background-color: #000; color: white; font-family: sans-serif; overflow: hidden; margin: 0; }
+        .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
         .active { display: block; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
+        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; }
-
-        /* Sidebar & Icons */
-        .sidebar { position: absolute; right: 10px; bottom: 140px; display: flex; flex-direction: column; gap: 20px; z-index: 1000; align-items: center; }
-        .icon-box { text-align: center; cursor: pointer; }
-        .liked { color: #ff0050 !important; }
-
-        /* --- COMMENT SECTION PANEL --- */
-        #commentPanel {
-            position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh;
-            background: #121212; border-radius: 20px 20px 0 0; z-index: 6000;
-            transition: bottom 0.3s ease; display: flex; flex-direction: column;
-        }
-        .comment-active { bottom: 0 !important; }
-        .comment-list { flex-grow: 1; overflow-y: auto; padding: 15px; }
-        .comment-item { display: flex; gap: 10px; margin-bottom: 15px; align-items: start; }
         
-        .bottom-info { position: absolute; bottom: 100px; left: 15px; z-index: 1000; pointer-events: none; }
-        nav { z-index: 5000; background: #000; border-top: 1px solid #222; }
+        /* YouTube Style Edit Page */
+        #edit-screen { background: #0f0f0f; z-index: 7000; overflow-y: auto; padding-bottom: 50px; }
+        input, textarea { background: #272727; border: none; border-radius: 8px; padding: 12px; color: white; width: 100%; outline: none; margin-bottom: 15px; }
+        
+        .sidebar { position: absolute; right: 10px; bottom: 140px; display: flex; flex-direction: column; gap: 20px; z-index: 1000; align-items: center; }
+        .bottom-info { position: absolute; bottom: 100px; left: 15px; z-index: 1000; }
+        nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 w-full p-4 flex justify-between items-center z-[5000] bg-gradient-to-b from-black/90 to-transparent">
-        <h1 class="text-xl font-black italic text-white">VACTRA <span class="text-red-600">FLOW</span></h1>
-        <div class="flex gap-5 text-lg"><i class="fas fa-search"></i><i class="fas fa-camera"></i></div>
-    </header>
-
     <div id="home-screen" class="screen active">
+        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
+            <h1 class="text-xl font-black italic tracking-tighter">VACTRA <span class="text-red-600">FLOW</span></h1>
+        </header>
         <div class="feed" id="mainFeed">
-            <div class="card">
-                <video loop playsinline autoplay muted src="https://player.vimeo.com/external/370331493.sd.mp4?s=34015694200c0182470ecf6406e30a516e8b4e7a&profile_id=139&oauth2_token_id=57447761"></video>
-                <div class="bottom-info">
-                    <p class="font-bold text-md">@Asheesh_Kumar</p>
-                    <p class="text-sm opacity-90">Vactra Flow is Live! 🚀</p>
-                </div>
-                <div class="sidebar">
-                    <div class="icon-box" onclick="this.children[0].classList.toggle('liked')"><i class="fas fa-thumbs-up text-2xl"></i><p class="text-[10px] mt-1">1.2M</p></div>
-                    <div class="icon-box" onclick="openComments()"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px] mt-1">45K</p></div>
-                    <div class="icon-box" onclick="shareNow()"><i class="fas fa-share text-2xl"></i><p class="text-[10px] mt-1">Share</p></div>
-                </div>
             </div>
+    </div>
+
+    <div id="edit-screen" class="screen">
+        <div class="p-4 flex items-center justify-between border-b border-zinc-800 bg-black sticky top-0 z-10">
+            <i class="fas fa-arrow-left text-xl cursor-pointer" onclick="showScreen('home-screen')"></i>
+            <span class="font-bold">Add details</span>
+            <button onclick="publishVideo()" class="bg-blue-600 px-5 py-1.5 rounded-full font-bold text-sm">Upload</button>
+        </div>
+        
+        <div class="p-4">
+            <div id="preview-container" class="w-full aspect-video bg-zinc-900 rounded-lg overflow-hidden mb-6 border border-zinc-800">
+                </div>
+            
+            <label class="text-xs text-gray-400 ml-1">Title</label>
+            <input type="text" id="vTitle" placeholder="Create a title (type @ to mention a channel)">
+            
+            <label class="text-xs text-gray-400 ml-1">Add description</label>
+            <textarea id="vDesc" rows="3" placeholder="Tell viewers about your video"></textarea>
+            
+            <label class="text-xs text-gray-400 ml-1">Tags (Comma separated)</label>
+            <input type="text" id="vTags" placeholder="e.g. #pharmacy, #bhopal, #vactra">
         </div>
     </div>
 
-    <div id="profile-screen" class="screen pt-20 bg-black">
+    <div id="profile-screen" class="screen bg-black pt-16 px-6">
         <div class="flex flex-col items-center">
-            <div class="w-24 h-24 bg-zinc-800 rounded-full border-2 border-red-600 flex items-center justify-center text-3xl font-bold">AK</div>
+            <div class="w-20 h-20 bg-zinc-800 rounded-full border-2 border-red-600 flex items-center justify-center text-2xl font-bold">AK</div>
             <h2 class="mt-4 text-xl font-bold">Asheesh Kumar</h2>
-            <div class="flex gap-8 mt-6">
-                <div class="text-center"><p class="font-bold">45.2K</p><p class="text-xs text-gray-500">Followers</p></div>
-                <div class="text-center"><p class="font-bold">1.2M</p><p class="text-xs text-gray-500">Likes</p></div>
-            </div>
-            <button class="mt-6 bg-zinc-800 px-10 py-2 rounded-md text-sm">Edit Profile</button>
         </div>
     </div>
 
-    <div id="commentPanel">
-        <div class="p-4 border-b border-zinc-800 flex justify-between items-center">
-            <span class="font-bold">Comments</span>
-            <i class="fas fa-times text-xl cursor-pointer" onclick="closeComments()"></i>
-        </div>
-        <div class="comment-list" id="commentBox">
-            <div class="comment-item">
-                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-[10px]">K</div>
-                <div><p class="text-[11px] font-bold text-gray-400">@Kuldeep</p><p class="text-sm">Bhai mast app banaya hai! 🔥</p></div>
-            </div>
-        </div>
-        <div class="p-4 bg-black flex gap-3 items-center">
-            <input type="text" id="userInput" placeholder="Add a comment..." class="flex-grow bg-zinc-900 rounded-full px-4 py-2 text-sm outline-none">
-            <button onclick="addComment()" class="text-blue-500 font-bold">Post</button>
-        </div>
-    </div>
-
-    <nav class="fixed bottom-0 w-full flex justify-around items-center py-3">
-        <div class="nav-item" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl"></i><span>Home</span></div>
-        <div class="nav-item" onclick="showScreen('home-screen')"><i class="fas fa-play-circle text-xl text-gray-400"></i><span>Shorts</span></div>
-        <div onclick="triggerUpload()" class="text-3xl cursor-pointer">+</div>
-        <div class="nav-item"><i class="fas fa-layer-group text-xl text-gray-400"></i><span>Subs</span></div>
-        <div class="nav-item" onclick="showScreen('profile-screen')"><i class="fas fa-user-circle text-xl text-gray-400"></i><span>You</span></div>
+    <nav class="flex justify-around items-center py-3">
+        <div class="text-center" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl"></i></div>
+        <div onclick="triggerUpload()" class="text-3xl">+</div>
+        <div class="text-center" onclick="showScreen('profile-screen')"><i class="fas fa-user-circle text-xl"></i></div>
     </nav>
 
     <input type="file" id="fileUp" accept="video/*" class="hidden">
 
     <script>
+        let currentVideoURL = "";
+
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            closeComments(); // Screen change hone par comment band ho jaye
-        }
-
-        // --- COMMENT LOGIC ---
-        function openComments() { document.getElementById('commentPanel').classList.add('comment-active'); }
-        function closeComments() { document.getElementById('commentPanel').classList.remove('comment-active'); }
-
-        function addComment() {
-            const input = document.getElementById('userInput');
-            if(input.value.trim() !== "") {
-                const div = document.createElement('div');
-                div.className = 'comment-item';
-                div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-[10px]">A</div>
-                                 <div><p class="text-[11px] font-bold text-gray-400">@Asheesh_Kumar</p><p class="text-sm">${input.value}</p></div>`;
-                document.getElementById('commentBox').prepend(div);
-                input.value = "";
-            }
         }
 
         function triggerUpload() { document.getElementById('fileUp').click(); }
 
-        function shareNow() {
-            if (navigator.share) navigator.share({title: 'Vactra Flow', url: window.location.href});
-            else alert("Link Copied!");
-        }
-
-        // --- UPLOAD LOGIC ---
+        // Step 1: Video Select hote hi Edit Page par bhejo
         document.getElementById('fileUp').onchange = function(e) {
             const file = e.target.files[0];
             if (file) {
-                const url = URL.createObjectURL(file);
-                const newCard = document.createElement('div');
-                newCard.className = 'card';
-                newCard.innerHTML = `
-                    <video loop playsinline autoplay src="${url}"></video>
-                    <div class="bottom-info"><p class="font-bold text-md">@Asheesh_Kumar</p></div>
-                    <div class="sidebar">
-                        <div class="icon-box" onclick="this.children[0].classList.toggle('liked')"><i class="fas fa-thumbs-up text-2xl"></i><p class="text-[10px] mt-1">0</p></div>
-                        <div class="icon-box" onclick="openComments()"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px] mt-1">0</p></div>
-                        <div class="icon-box" onclick="shareNow()"><i class="fas fa-share text-2xl"></i><p class="text-[10px] mt-1">Share</p></div>
-                    </div>`;
-                document.getElementById('mainFeed').prepend(newCard);
-                showScreen('home-screen');
-                newCard.scrollIntoView({ behavior: 'smooth' });
+                currentVideoURL = URL.createObjectURL(file);
+                // Preview dikhao edit screen par
+                document.getElementById('preview-container').innerHTML = `<video class="w-full h-full object-contain" src="${currentVideoURL}" controls></video>`;
+                showScreen('edit-screen');
             }
         };
+
+        // Step 2: Upload button dabane par Feed mein add karo
+        function publishVideo() {
+            const title = document.getElementById('vTitle').value || "Untiled Video";
+            const desc = document.getElementById('vDesc').value || "";
+            
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <video loop playsinline autoplay src="${currentVideoURL}"></video>
+                <div class="bottom-info">
+                    <p class="font-bold text-md">@Asheesh_Kumar</p>
+                    <p class="text-sm font-bold text-white mt-1">${title}</p>
+                    <p class="text-xs opacity-75">${desc}</p>
+                </div>
+                <div class="sidebar">
+                    <div class="icon-box" onclick="this.children[0].classList.toggle('text-red-600')"><i class="fas fa-thumbs-up text-2xl"></i><p class="text-[10px]">0</p></div>
+                    <div class="icon-box"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px]">0</p></div>
+                    <div class="icon-box"><i class="fas fa-share text-2xl"></i><p class="text-[10px]">Share</p></div>
+                </div>
+            `;
+            
+            document.getElementById('mainFeed').prepend(card);
+            
+            // Clear inputs and go home
+            document.getElementById('vTitle').value = "";
+            document.getElementById('vDesc').value = "";
+            showScreen('home-screen');
+            card.scrollIntoView({ behavior: 'smooth' });
+            
+            // Save to LocalStorage (Basic simulation)
+            alert("Video Published to Vactra Flow!");
+        }
     </script>
 </body>
 </html>
