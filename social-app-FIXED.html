@@ -3,92 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Shorts & Profile</title>
+    <title>Vactra Flow - Comments Active</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; margin: 0; color: white; font-family: sans-serif; overflow: hidden; }
-        .screen { height: 100vh; width: 100vw; display: none; position: relative; }
-        .active { display: block; }
-        
-        /* Shorts Feed Styling */
+        body { background-color: #000; margin: 0; color: white; overflow: hidden; font-family: sans-serif; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; }
-
-        /* Sidebar Icons */
-        .sidebar { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 20px; z-index: 100; }
-        .icon-box { text-align: center; }
-
-        /* Profile Page Styling */
-        #profile-screen { background: linear-gradient(to bottom, #1a1a2e, #000); overflow-y: auto; }
+        
+        /* Comment Section Slide-up */
+        #commentSection {
+            position: fixed; bottom: -100%; left: 0; width: 100%; height: 70vh;
+            background: #1a1a1a; border-radius: 20px 20px 0 0; z-index: 3000;
+            transition: bottom 0.4s ease; display: flex; flex-direction: column;
+        }
+        .show-comments { bottom: 0 !important; }
+        .comment-list { flex-grow: 1; overflow-y: auto; padding: 20px; }
+        .comment-item { display: flex; gap: 12px; margin-bottom: 20px; }
+        .user-av { width: 35px; height: 35px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; }
+        
+        .side-bar { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 25px; align-items: center; z-index: 50; }
+        .liked { color: #ef4444 !important; }
     </style>
 </head>
 <body>
 
-    <div id="home-screen" class="screen active">
-        <div class="feed" id="mainFeed">
-            <div class="card">
-                <video loop playsinline autoplay muted src="https://player.vimeo.com/external/370331493.sd.mp4?s=34015694200c0182470ecf6406e30a516e8b4e7a&profile_id=139&oauth2_token_id=57447761"></video>
-                <div class="absolute bottom-24 left-4 p-2">
-                    <p class="font-bold text-lg">@Asheesh_Kumar</p>
-                    <p class="text-sm">Bhopal ka apna flow! 🍎🚀</p>
-                </div>
-                <div class="sidebar">
-                    <div class="icon-box"><i class="fas fa-heart text-3xl"></i><p class="text-xs">1.2M</p></div>
-                    <div class="icon-box"><i class="fas fa-comment-dots text-3xl"></i><p class="text-xs">45K</p></div>
-                    <div class="icon-box"><i class="fas fa-share text-3xl"></i><p class="text-xs">Share</p></div>
-                </div>
+    <main class="feed" id="mainFeed">
+        <div class="card">
+            <video loop playsinline autoplay muted src="https://player.vimeo.com/external/370331493.sd.mp4?s=34015694200c0182470ecf6406e30a516e8b4e7a&profile_id=139&oauth2_token_id=57447761"></video>
+            <div class="side-bar">
+                <div onclick="this.children[0].classList.toggle('liked')"><i class="fas fa-heart text-3xl"></i><span class="text-xs">1.2M</span></div>
+                
+                <div onclick="openComments()"><i class="fas fa-comment-dots text-3xl"></i><span class="text-xs">45K</span></div>
+                
+                <div onclick="shareNow()"><i class="fas fa-share text-3xl"></i><span class="text-xs">Share</span></div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <div id="profile-screen" class="screen px-6 pt-10">
-        <div class="flex flex-col items-center">
-            <div class="w-24 h-24 bg-gray-700 rounded-full border-2 border-blue-500 mb-4 flex items-center justify-center">
-                <i class="fas fa-user text-4xl text-gray-400"></i>
-            </div>
-            <h2 class="text-2xl font-bold">Asheesh Kumar</h2>
-            <p class="text-blue-400 text-sm">Pharmacy Student | Content Creator</p>
-            
-            <button class="mt-4 bg-blue-600 px-10 py-2 rounded-full font-bold">Follow</button>
-
-            <div class="flex gap-10 mt-8 text-center">
-                <div><p class="font-bold">128</p><p class="text-xs text-gray-400">Following</p></div>
-                <div><p class="font-bold">45.2K</p><p class="text-xs text-gray-400">Followers</p></div>
-                <div><p class="font-bold">1.2M</p><p class="text-xs text-gray-400">Likes</p></div>
-            </div>
+    <div id="commentSection">
+        <div class="p-4 border-b border-gray-800 flex justify-between items-center">
+            <span class="font-bold">45,200 Comments</span>
+            <i class="fas fa-times text-xl cursor-pointer" onclick="closeComments()"></i>
         </div>
         
-        <div class="grid grid-cols-3 gap-1 mt-10">
-            <div class="aspect-[3/4] bg-gray-800 rounded-sm"></div>
-            <div class="aspect-[3/4] bg-gray-800 rounded-sm"></div>
-            <div class="aspect-[3/4] bg-gray-800 rounded-sm"></div>
+        <div class="comment-list" id="commentList">
+            <div class="comment-item">
+                <div class="user-av"><i class="fas fa-user text-xs"></i></div>
+                <div>
+                    <p class="text-xs font-bold text-gray-400">@Kuldeep</p>
+                    <p class="text-sm">Bhai kamaal ki app banayi hai! 🔥</p>
+                </div>
+            </div>
+            <div class="comment-item">
+                <div class="user-av"><i class="fas fa-user text-xs"></i></div>
+                <div>
+                    <p class="text-xs font-bold text-gray-400">@User_99</p>
+                    <p class="text-sm">Bhopal se support! 🍎🚀</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-gray-800 flex gap-4 bg-black">
+            <input type="text" id="comInput" placeholder="Add a comment..." class="flex-grow bg-gray-900 rounded-full px-4 py-2 text-sm outline-none">
+            <button onclick="postComment()" class="text-blue-500 font-bold">Post</button>
         </div>
     </div>
 
-    <nav class="fixed bottom-0 w-full bg-black/90 border-t border-white/10 flex justify-around items-center py-4 z-[2000]">
-        <i onclick="showScreen('home-screen')" class="fas fa-home text-2xl cursor-pointer text-white hover:text-blue-500"></i>
-        <div onclick="document.getElementById('fileUp').click()" class="bg-white text-black px-4 py-0.5 rounded-lg font-bold text-2xl cursor-pointer">+</div>
-        <i onclick="showScreen('profile-screen')" class="fas fa-user-circle text-2xl cursor-pointer text-gray-500 hover:text-blue-500"></i>
+    <nav class="fixed bottom-0 w-full bg-black border-t border-white/10 flex justify-around items-center py-4 z-[2000]">
+        <i class="fas fa-home text-2xl text-blue-500"></i>
+        <div class="bg-white text-black px-5 py-1 rounded-xl font-bold text-3xl">+</div>
+        <i class="fas fa-user-circle text-2xl text-gray-400"></i>
     </nav>
 
-    <input type="file" id="fileUp" accept="video/*" class="hidden">
-
     <script>
-        // Screen Switching Logic
-        function showScreen(screenId) {
-            // Saari screens hide karo
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            // Selected screen show karo
-            document.getElementById(screenId).classList.add('active');
+        function openComments() {
+            document.getElementById('commentSection').classList.add('show-comments');
+        }
+        function closeComments() {
+            document.getElementById('commentSection').classList.remove('show-comments');
         }
 
-        // Auto-scroll to top when home is clicked
-        document.querySelector('.fa-home').addEventListener('click', () => {
-            document.getElementById('mainFeed').scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        function postComment() {
+            const input = document.getElementById('comInput');
+            const list = document.getElementById('commentList');
+            if(input.value.trim() !== "") {
+                const newCom = document.createElement('div');
+                newCom.className = 'comment-item';
+                newCom.innerHTML = `
+                    <div class="user-av"><i class="fas fa-user text-xs"></i></div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-400">@Asheesh_Kumar</p>
+                        <p class="text-sm">${input.value}</p>
+                    </div>
+                `;
+                list.prepend(newCom);
+                input.value = "";
+                list.scrollTop = 0;
+            }
+        }
+
+        function shareNow() {
+            if (navigator.share) navigator.share({title: 'Vactra Flow', url: window.location.href});
+        }
     </script>
 </body>
 </html>
