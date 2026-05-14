@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Fixed & Smooth</title>
+    <title>Vactra Flow - Profile Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -11,25 +11,17 @@
         .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
         .active { display: block; }
         
-        /* Feed - Smooth Snapping */
-        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; }
-        video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        video { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Sidebar & Info */
         .sidebar { position: absolute; right: 12px; bottom: 160px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
-        .icon-box { text-align: center; cursor: pointer; transition: 0.2s; }
-        .icon-box:active { transform: scale(1.3); }
-        .bottom-info { position: absolute; bottom: 120px; left: 15px; z-index: 1000; max-width: 80%; }
+        .bottom-info { position: absolute; bottom: 120px; left: 15px; z-index: 1000; }
         
-        /* Navigation */
         nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; cursor: pointer; }
         .active-nav { color: white; }
-
-        /* Fix for Red Like */
-        .liked { color: #ff0000 !important; }
     </style>
 </head>
 <body>
@@ -51,48 +43,29 @@
             <h2 class="mt-4 text-2xl font-bold">Asheesh Kumar</h2>
             <p class="text-gray-500">Pharmacy Student | Bhopal</p>
             <div class="flex justify-around mt-8 bg-zinc-900 p-4 rounded-xl">
-                <div><p class="font-bold">45K</p><p class="text-[10px]">Subs</p></div>
-                <div><p class="font-bold">1.2M</p><p class="text-[10px]">Likes</p></div>
+                <div><p class="font-bold text-white">45K</p><p class="text-[10px] text-gray-500">Subs</p></div>
+                <div><p class="font-bold text-white">1.2M</p><p class="text-[10px] text-gray-500">Likes</p></div>
             </div>
         </div>
     </div>
 
     <nav>
         <div class="nav-item active-nav" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl"></i><span>Home</span></div>
-        <div class="nav-item" onclick="showScreen('home-screen')"><i class="fas fa-play-circle text-xl"></i><span>Shorts</span></div>
         <div onclick="document.getElementById('fileInput').click()" class="text-4xl font-light cursor-pointer text-white">+</div>
-        <div class="nav-item"><i class="fas fa-layer-group text-xl"></i><span>Subs</span></div>
         <div class="nav-item" onclick="showScreen('profile-screen')"><i class="fas fa-user-circle text-xl"></i><span>You</span></div>
     </nav>
 
     <input type="file" id="fileInput" accept="video/*" class="hidden">
 
     <script>
-        let currentUrl = "";
-
-        window.onload = function() {
-            const saved = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
-            saved.forEach(v => renderVideo(v.url, v.title));
-            handleScroll();
-        };
-
-        // 1. PERFORMANCE FIX: Sirf screen wali video chalegi
-        function handleScroll() {
-            const videos = document.querySelectorAll('video');
-            videos.forEach(v => {
-                const rect = v.getBoundingClientRect();
-                if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
-                    if(v.paused) v.play().catch(e => {});
-                } else {
-                    v.pause();
-                }
-            });
-        }
-
-        // 2. PROFILE ICON FIX: Yeh ab screen switch karega
+        // Screen badalne ka logic
         function showScreen(id) {
+            // Saari screens ko hide karo
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Selected screen ko show karo
             document.getElementById(id).classList.add('active');
+            
+            // Video ko pause kar do agar profile khule toh
             if(id !== 'home-screen') {
                 document.querySelectorAll('video').forEach(v => v.pause());
             } else {
@@ -100,18 +73,22 @@
             }
         }
 
-        // 3. UPLOAD FIX: Fast processing
+        function handleScroll() {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(v => {
+                const rect = v.getBoundingClientRect();
+                if (rect.top >= 0 && rect.bottom <= window.innerHeight) { v.play().catch(e=>{}); } 
+                else { v.pause(); }
+            });
+        }
+
+        // Baki upload aur render logic wahi hai jo aapne video mein dikhaya
         document.getElementById('fileInput').onchange = function(e) {
             const file = e.target.files[0];
             if (file) {
                 const url = URL.createObjectURL(file);
-                const t = prompt("Caption likhiye:");
-                if(t) {
-                    renderVideo(url, t);
-                    const db = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
-                    db.unshift({url: url, title: t});
-                    localStorage.setItem('vactra_pro_db', JSON.stringify(db));
-                }
+                renderVideo(url, "New Short");
+                showScreen('home-screen');
             }
         };
 
@@ -125,17 +102,11 @@
                     <p class="text-sm">${title}</p>
                 </div>
                 <div class="sidebar">
-                    <div class="icon-box" onclick="toggleLike(this)"><i class="fas fa-heart text-2xl"></i><p class="text-[10px]">1.2M</p></div>
+                    <div class="icon-box"><i class="fas fa-heart text-2xl"></i><p class="text-[10px]">1.2M</p></div>
                     <div class="icon-box"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px]">45K</p></div>
                 </div>`;
             document.getElementById('mainFeed').prepend(card);
-        }
-
-        // 4. LIKE ICON FIX: Yeh ab red hoga click par
-        function toggleLike(btn) {
-            btn.classList.toggle('liked');
-            const icon = btn.querySelector('i');
-            icon.style.color = btn.classList.contains('liked') ? 'red' : 'white';
+            handleScroll();
         }
     </script>
 </body>
