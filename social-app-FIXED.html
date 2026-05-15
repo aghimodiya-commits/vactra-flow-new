@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Video Sharing App</title>
+    <title>Vactra Flow - Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; color: white; font-family: sans-serif; margin: 0; overflow-x: hidden; }
-        .screen { height: 100vh; width: 100vw; display: none; position: fixed; top: 0; left: 0; }
+        body { background-color: #000; color: white; font-family: sans-serif; margin: 0; }
+        .screen { height: 100vh; width: 100vw; display: none; position: fixed; top: 0; left: 0; overflow-y: auto; }
         .active { display: block; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
         .grid-item { aspect-ratio: 9/16; background: #111; overflow: hidden; position: relative; border: 1px solid #222; }
+        .grid-item video { width: 100%; height: 100%; object-fit: cover; }
         nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
     </style>
 </head>
@@ -27,12 +28,19 @@
         <div class="feed" id="mainFeed"></div>
     </div>
 
-    <div id="profile-screen" class="screen bg-black overflow-y-auto pb-20">
+    <div id="profile-screen" class="screen bg-black pb-20">
         <div class="p-4 border-b border-zinc-900 flex items-center sticky top-0 bg-black z-10">
             <i class="fas fa-arrow-left mr-4" onclick="showScreen('home-screen')"></i>
-            <span id="display-name" class="font-bold">Asheesh Kumar</span>
+            <span class="font-bold">Asheesh Kumar</span>
         </div>
-        <div id="auth-content" class="p-6 text-center"></div>
+        <div id="auth-content" class="p-6 text-center">
+            <div class="w-20 h-20 bg-red-600 rounded-full mx-auto flex items-center justify-center text-2xl font-bold mb-3">A</div>
+            <h2 class="text-xl font-bold">Asheesh Kumar</h2>
+            <p class="text-gray-400 text-sm">Pharmacy Student | Bhopal</p>
+            <div class="flex justify-center gap-6 mt-4 text-gray-400 text-xs">
+                <span><b>45K</b> Subs</span> <span><b>1.2M</b> Likes</span>
+            </div>
+        </div>
         <div class="border-t border-zinc-900">
             <div class="flex justify-around p-3 text-sm font-bold text-gray-400">
                 <span class="text-white border-b-2 border-white pb-1">VIDEOS</span>
@@ -56,50 +64,45 @@
     <nav>
         <div onclick="showScreen('home-screen')"><i class="fas fa-home text-xl"></i></div>
         <div onclick="document.getElementById('fileInput').click()" class="text-3xl">+</div>
-        <div onclick="handleProfileClick()"><i class="fas fa-user-circle text-xl"></i></div>
+        <div onclick="showScreen('profile-screen')"><i class="fas fa-user-circle text-xl"></i></div>
     </nav>
 
     <input type="file" id="fileInput" accept="video/*" class="hidden">
 
     <script>
-        let currentUrl = "";
-        let userData = { name: "Asheesh Kumar", email: "ashish@vactra.com" }; // Local Data
+        let currentVideoUrl = "";
 
+        // Page load hote hi videos load karein
         window.onload = function() {
-            loadVideos();
-            updateProfileUI();
+            loadAllContent();
         };
 
-        function loadVideos() {
-            const saved = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
-            const feed = document.getElementById('mainFeed');
-            const grid = document.getElementById('user-video-grid');
+        function loadAllContent() {
+            const db = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
+            const mainFeed = document.getElementById('mainFeed');
+            const videoGrid = document.getElementById('user-video-grid');
             
-            feed.innerHTML = ""; 
-            grid.innerHTML = "";
+            mainFeed.innerHTML = "";
+            videoGrid.innerHTML = "";
 
-            saved.forEach(v => {
-                renderVideo(v.url, v.title);
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                item.innerHTML = `<video src="${v.url}" muted></video>`;
-                grid.appendChild(item);
+            db.forEach(videoData => {
+                // Main Feed mein add karein
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <video loop src="${videoData.url}" onclick="this.paused?this.play():this.pause()"></video>
+                    <div class="absolute bottom-24 left-4">
+                        <p class="font-bold">@Asheesh_Kumar</p>
+                        <p class="text-sm">${videoData.title}</p>
+                    </div>`;
+                mainFeed.appendChild(card);
+
+                // Profile Grid mein add karein
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.innerHTML = `<video src="${videoData.url}" muted></video>`;
+                videoGrid.appendChild(gridItem);
             });
-        }
-
-        function handleProfileClick() {
-            showScreen('profile-screen');
-        }
-
-        function updateProfileUI() {
-            const content = document.getElementById('auth-content');
-            content.innerHTML = `
-                <div class="w-20 h-20 bg-red-600 rounded-full mx-auto flex items-center justify-center text-2xl font-bold mb-3">A</div>
-                <h2 class="text-xl font-bold">${userData.name}</h2>
-                <div class="flex justify-center gap-6 mt-4 text-gray-400 text-xs">
-                    <span><b>45K</b> Subs</span> <span><b>1.2M</b> Likes</span>
-                </div>
-            `;
         }
 
         function showScreen(id) {
@@ -110,35 +113,25 @@
         document.getElementById('fileInput').onchange = function(e) {
             const file = e.target.files[0];
             if (file) {
-                currentUrl = URL.createObjectURL(file);
-                document.getElementById('preview-box').innerHTML = `<video src="${currentUrl}" class="w-full h-full object-cover" autoplay muted loop></video>`;
+                currentVideoUrl = URL.createObjectURL(file);
+                document.getElementById('preview-box').innerHTML = `<video src="${currentVideoUrl}" class="w-full h-full object-cover" autoplay muted loop></video>`;
                 showScreen('edit-screen');
             }
         };
 
         function publishVideo() {
-            const t = document.getElementById('vTitle').value || "New Video";
+            const title = document.getElementById('vTitle').value || "New Short";
             const db = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
             
-            // Database mein add karo
-            db.unshift({url: currentUrl, title: t});
+            // New video data save karein
+            db.unshift({ url: currentVideoUrl, title: title });
             localStorage.setItem('vactra_pro_db', JSON.stringify(db));
             
-            // Refresh feed and profile
-            loadVideos();
+            // Screens refresh karein
+            loadAllContent();
             showScreen('home-screen');
-            alert("Bhai, Aapka video channel par upload ho gaya! 🍎");
-        }
-
-        function renderVideo(url, title) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `<video loop src="${url}" onclick="this.paused?this.play():this.pause()"></video>
-                <div class="absolute bottom-20 left-4">
-                    <p class="font-bold">@Asheesh_Kumar</p>
-                    <p class="text-sm">${title}</p>
-                </div>`;
-            document.getElementById('mainFeed').appendChild(card);
+            document.getElementById('vTitle').value = ""; // Reset title
+            alert("Bhai, Aapka Short Channel par upload ho gaya! 🍎");
         }
     </script>
 </body>
