@@ -1,150 +1,22 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Final Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #000; color: white; font-family: sans-serif; margin: 0; overflow: hidden; }
-        .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 70px; }
-        .active { display: block; }
-        .header-gradient {
-            background: linear-gradient(135deg, #FF1493 0%, #FFD700 30%, #FF8C00 50%, #4B0082 70%, #00BFFF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .shorts-feed { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; scrollbar-width: none; }
-        .short-card { height: 100vh; width: 100%; scroll-snap-align: start; position: relative; background: #000; }
-        .short-card video { width: 100%; height: 100%; object-fit: cover; }
-        nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; z-index: 5000; }
-        .nav-item { color: #aaa; font-size: 10px; text-align: center; cursor: pointer; }
-        .active-nav { color: white; }
-    </style>
-</head>
-<body>
-
-    <div id="home-screen" class="screen active">
-        <div class="p-4 flex items-center gap-2 sticky top-0 bg-black z-10">
-            <h1 class="text-2xl font-black header-gradient">VACTRA FLOW</h1>
-        </div>
-        <div id="home-feed" class="p-2 space-y-4"></div>
-    </div>
-
-    <div id="shorts-screen" class="screen">
-        <div id="shorts-feed" class="shorts-feed" onscroll="checkVideoPlay()"></div>
-    </div>
-
-    <div id="profile-screen" class="screen bg-zinc-950 p-6 text-center">
-        <div id="user-avatar" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-red-600 flex items-center justify-center text-3xl font-bold">A</div>
-        <h2 id="user-name" class="text-xl font-bold">Asheesh Kumar</h2>
-        <div class="grid grid-cols-3 gap-1 mt-6" id="my-video-grid"></div>
-    </div>
-
-    <div id="upload-screen" class="screen bg-black">
-        <div class="p-4 flex justify-between border-b border-zinc-800">
-            <i class="fas fa-times" onclick="showScreen('home-screen')"></i>
-            <span class="font-bold">New Post</span>
-            <button id="upBtn" onclick="saveToDB()" class="text-blue-500 font-bold">Post</button>
-        </div>
-        <div id="preview" class="w-full h-64 bg-zinc-900"></div>
-        <div class="p-4 space-y-4">
-            <input type="text" id="vTitle" placeholder="Video Title..." class="w-full bg-zinc-800 p-3 rounded">
-            <select id="vType" class="w-full bg-zinc-800 p-3 rounded">
-                <option value="long">Long Video (Home)</option>
-                <option value="short">Short Video (Shorts)</option>
-            </select>
-        </div>
-    </div>
-
-    <nav>
-        <div class="nav-item active-nav" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl"></i><p>Home</p></div>
-        <div class="nav-item" onclick="showScreen('shorts-screen')"><i class="fas fa-play-circle text-xl"></i><p>Shorts</p></div>
-        <div onclick="document.getElementById('fInp').click()" class="text-3xl font-light">+</div>
-        <div class="nav-item" onclick="showScreen('profile-screen')"><i class="fas fa-user-circle text-xl"></i><p>You</p></div>
-    </nav>
-
-    <input type="file" id="fInp" accept="video/*" class="hidden">
-
-    <script>
-        let db;
-        let selectedFile = null;
-
-        const request = indexedDB.open("VactraDatabasePro", 1);
-        request.onupgradeneeded = e => {
-            db = e.target.result;
-            db.createObjectStore("content", { keyPath: "id", autoIncrement: true });
-        };
-        request.onsuccess = e => { db = e.target.result; loadAll(); };
-
-        function saveToDB() {
-            const title = document.getElementById('vTitle').value;
-            const type = document.getElementById('vType').value;
-            if(!selectedFile) return;
-
-            document.getElementById('upBtn').innerText = "Wait...";
-            const reader = new FileReader();
-            reader.readAsDataURL(selectedFile);
-            reader.onload = () => {
-                const tx = db.transaction("content", "readwrite");
-                tx.objectStore("content").add({ url: reader.result, title, type });
-                tx.oncomplete = () => location.reload();
-            };
-        }
-
-        function loadAll() {
-            const store = db.transaction("content", "readonly").objectStore("content");
-            store.getAll().onsuccess = e => {
-                e.target.result.forEach(item => {
-                    if(item.type === 'short') renderShort(item);
-                    else renderHome(item);
-                    renderGrid(item);
-                });
-            };
-        }
-
-        function renderHome(v) {
-            const d = document.createElement('div');
-            d.innerHTML = `<video src="${v.url}" controls class="w-full aspect-video"></video><p class="p-2 font-bold">${v.title}</p>`;
-            document.getElementById('home-feed').prepend(d);
-        }
-
-        function renderShort(v) {
-            const d = document.createElement('div');
-            d.className = 'short-card';
-            d.innerHTML = `<video loop src="${v.url}" class="w-full h-full object-cover"></video><div class="absolute bottom-20 left-4 font-bold">${v.title}</div>`;
-            document.getElementById('shorts-feed').prepend(d);
-        }
-
-        function renderGrid(v) {
-            const d = document.createElement('div');
-            d.className = 'aspect-[9/16] bg-zinc-800';
-            d.innerHTML = `<video src="${v.url}" class="w-full h-full object-cover" muted></video>`;
-            document.getElementById('my-video-grid').prepend(d);
-        }
-
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('video').forEach(v => v.pause());
-        }
-
-        document.getElementById('fInp').onchange = e => {
-            selectedFile = e.target.files[0];
-            if(selectedFile) {
-                document.getElementById('preview').innerHTML = `<video src="${URL.createObjectURL(selectedFile)}" class="w-full h-full object-contain" muted autoplay></video>`;
-                showScreen('upload-screen');
-            }
-        };
-
-        function checkVideoPlay() {
-            document.querySelectorAll('.short-card video').forEach(v => {
-                const r = v.getBoundingClientRect();
-                if(r.top >= 0 && r.bottom <= window.innerHeight) v.play().catch(()=>{});
-                else v.pause();
-            });
-        }
-    </script>
-</body>
-</html>
+{
+  "name": "Vactra Flow",
+  "short_name": "VFlow",
+  "start_url": "social-app-FIXED.html",
+  "display": "standalone",
+  "background_color": "#01010d",
+  "theme_color": "#FF1493",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/T3LgTmsM/vflow-perfect-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.postimg.cc/T3LgTmsM/vflow-perfect-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
