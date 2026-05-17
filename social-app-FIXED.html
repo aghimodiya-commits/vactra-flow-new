@@ -6,8 +6,8 @@
     <title>Vactra Flow - Cosmic Edition</title>
     
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="https://aghimodiya-commits.github.io/vactra-flow-new/vactra-flow-cosmic-apple.png">
-    <link rel="apple-touch-icon" href="https://aghimodiya-commits.github.io/vactra-flow-new/vactra-flow-cosmic-apple.png">
+    <link rel="icon" type="image/png" href="vactra-flow-cosmic-apple.png">
+    <link rel="apple-touch-icon" href="vactra-flow-cosmic-apple.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -16,14 +16,12 @@
         .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
         .active { display: block; }
         
-        /* Cosmic Gradient for Text */
         .cosmic-gradient {
             background: linear-gradient(135deg, #FF1493 0%, #FFD700 30%, #FF8C00 50%, #4B0082 70%, #00BFFF 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Splash Screen styling with background blur */
         #splash-screen { 
             display: flex; 
             flex-direction: column; 
@@ -47,27 +45,22 @@
             filter: drop-shadow(0 0 20px rgba(255, 20, 147, 0.6));
         }
 
-        /* Feed */
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .feed::-webkit-scrollbar { display: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Sidebar & Buttons */
         .sidebar { position: absolute; right: 12px; bottom: 160px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
         .icon-box { text-align: center; cursor: pointer; }
         .bottom-info { position: absolute; bottom: 120px; left: 15px; z-index: 1000; max-width: 80%; }
         
-        /* Navigation */
         nav { z-index: 5000; background: #000; border-top: 1px solid #111; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; cursor: pointer; }
         .active-nav { color: white; }
 
-        /* Grid for Shorts Section */
         #video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
         .grid-item { aspect-ratio: 9/16; background: #111; overflow: hidden; position: relative; }
 
-        /* Auth Screens */
         .input-group { background: #1c1c1c; padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #222; }
         input { background: transparent; border: none; color: white; width: 100%; outline: none; }
         
@@ -87,7 +80,7 @@
 
     <div id="splash-screen" class="screen active">
         <div class="splash-logo-container">
-            <img src="https://aghimodiya-commits.github.io/vactra-flow-new/vactra-flow-cosmic-apple.png" alt="Vactra Flow Logo" onerror="this.src='https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=120&auto=format&fit=crop';">
+            <img src="vactra-flow-cosmic-apple.png" alt="Vactra Flow Logo">
         </div>
         <h1 class="text-3xl font-black cosmic-gradient tracking-wider">VACTRA FLOW</h1>
         <p class="text-xs text-zinc-500 mt-2 tracking-widest uppercase">Tap Screen to Play Music</p>
@@ -96,7 +89,7 @@
     <div id="home-screen" class="screen">
         <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
             <div class="flex items-center gap-2">
-                <img src="https://aghimodiya-commits.github.io/vactra-flow-new/vactra-flow-cosmic-apple.png" class="w-7 h-7 object-contain">
+                <img src="vactra-flow-cosmic-apple.png" class="w-7 h-7 object-contain">
                 <h1 class="text-xl font-black italic tracking-tighter uppercase cosmic-gradient">VACTRA FLOW</h1>
             </div>
             <button onclick="toggleMusic()" class="text-zinc-400 hover:text-white p-2">
@@ -145,7 +138,7 @@
 
     <nav>
         <div class="nav-item active-nav" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl mb-1"></i><span>Home</span></div>
-        <div class="nav-item" onclick="showScreen('shorts-screen')"><i class="fas fa-play-circle text-xl mb-1"></i><span>Shorts</span></div>
+        <div class="nav-item" onclick="shorts-screen"><i class="fas fa-play-circle text-xl mb-1"></i><span>Shorts</span></div>
         <div onclick="document.getElementById('fileInput').click()" class="w-10 h-10 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full flex items-center justify-center text-2xl font-light cursor-pointer shadow-lg shadow-pink-900/40 text-white">+</div>
         <div class="nav-item"><i class="fas fa-layer-group text-xl mb-1"></i><span>Subs</span></div>
         <div class="nav-item" onclick="handleProfileClick()"><i class="fas fa-user-circle text-xl mb-1"></i><span>You</span></div>
@@ -158,32 +151,22 @@
         let userData = JSON.parse(localStorage.getItem('vactra_user')) || null;
         let db;
 
-        // Auto-play music logic on first user interaction
         const music = document.getElementById('bg-music');
         document.body.addEventListener('click', () => {
-            if (music.paused) {
-                music.play().catch(e => console.log("Music play auto-blocked"));
-            }
+            if (music.paused) { music.play().catch(e => {}); }
         }, { once: true });
 
         function toggleMusic() {
             const icon = document.getElementById('music-icon');
-            if (music.paused) {
-                music.play();
-                icon.className = "fas fa-music text-pink-500 animate-spin";
-            } else {
-                music.pause();
-                icon.className = "fas fa-music text-zinc-400";
-            }
+            if (music.paused) { music.play(); icon.className = "fas fa-music text-pink-500 animate-spin"; } 
+            else { music.pause(); icon.className = "fas fa-music text-zinc-400"; }
         }
 
-        // Splash Screen hide duration (3 seconds)
         setTimeout(() => {
             document.getElementById('splash-screen').classList.remove('active');
             showScreen('home-screen');
         }, 3000);
 
-        // DB setup for unlimited storage
         const request = indexedDB.open("VactraFinalDB", 1);
         request.onupgradeneeded = e => {
             db = e.target.result;
@@ -194,10 +177,7 @@
         function loadFromDB() {
             const store = db.transaction("shorts", "readonly").objectStore("shorts");
             store.getAll().onsuccess = e => {
-                e.target.result.forEach(v => {
-                    renderVideo(v.url, v.title, v.tags);
-                    addToGrid(v.url);
-                });
+                e.target.result.forEach(v => { renderVideo(v.url, v.title, v.tags); addToGrid(v.url); });
             };
         }
 
@@ -206,7 +186,6 @@
             const tags = document.getElementById('vTags').value || "";
             const btn = document.getElementById('publishBtn');
             if (!selectedFile) return;
-
             btn.innerText = "Uploading..."; btn.disabled = true;
 
             const reader = new FileReader();
@@ -216,11 +195,9 @@
                 const transaction = db.transaction("shorts", "readwrite");
                 transaction.objectStore("shorts").add({ url: base64, title: t, tags: tags });
                 transaction.oncomplete = () => {
-                    renderVideo(base64, t, tags);
-                    addToGrid(base64);
+                    renderVideo(base64, t, tags); addToGrid(base64);
                     btn.innerText = "Next"; btn.disabled = false;
-                    showScreen('home-screen');
-                    alert("Short Uploaded! 🚀");
+                    showScreen('home-screen'); alert("Short Uploaded! 🚀");
                 };
             };
         }
@@ -236,9 +213,7 @@
                     <p class="text-xs text-blue-400 mt-1">${tags}</p>
                 </div>
                 <div class="sidebar">
-                    <div class="icon-box" onclick="this.querySelector('i').classList.toggle('text-red-500')">
-                        <i class="fas fa-heart text-2xl"></i><p class="text-[10px]">Like</p>
-                    </div>
+                    <div class="icon-box" onclick="this.querySelector('i').classList.toggle('text-red-500')"><i class="fas fa-heart text-2xl"></i><p class="text-[10px]">Like</p></div>
                     <div class="icon-box" onclick="toggleComments()"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px]">Chat</p></div>
                     <div class="icon-box" onclick="navigator.share({title: '${title}'})"><i class="fas fa-share text-2xl"></i><p class="text-[10px]">Share</p></div>
                 </div>`;
@@ -266,12 +241,8 @@
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('video').forEach(v => v.pause());
             
-            // Check Navigation Items
             document.querySelectorAll('nav .nav-item').forEach(n => n.classList.remove('active-nav'));
-            if(id === 'home-screen') {
-                document.querySelector('nav .fa-home').parentElement.classList.add('active-nav');
-                handleScroll();
-            }
+            if(id === 'home-screen') { document.querySelector('nav .fa-home').parentElement.classList.add('active-nav'); handleScroll(); }
             if(id === 'shorts-screen') document.querySelector('nav .fa-play-circle').parentElement.classList.add('active-nav');
             if(id === 'profile-screen') document.querySelector('nav .fa-user-circle').parentElement.classList.add('active-nav');
         }
@@ -290,15 +261,18 @@
         function handleProfileClick() { updateProfileUI(); showScreen('profile-screen'); }
         function updateProfileUI() {
             const content = document.getElementById('auth-content');
-            if (!userData) {
-                content.innerHTML = `<button onclick="mockLogin()" class="bg-white text-black p-3 rounded-lg font-bold w-full">Gmail Sign in</button>`;
-            } else {
-                content.innerHTML = `<div class="text-center"><div class="w-20 h-20 bg-zinc-900 rounded-full mx-auto flex items-center justify-center text-2xl mb-4 border-2 border-pink-600 cosmic-gradient font-bold">${userData.name[0]}</div><h2 class="text-xl font-bold">${userData.name}</h2><button onclick="localStorage.removeItem('vactra_user'); location.reload();" class="mt-10 text-red-500 text-sm">Sign Out</button></div>`;
-            }
+            if (!userData) { content.innerHTML = `<button onclick="mockLogin()" class="bg-white text-black p-3 rounded-lg font-bold w-full">Gmail Sign in</button>`; } 
+            else { content.innerHTML = `<div class="text-center"><div class="w-20 h-20 bg-zinc-900 rounded-full mx-auto flex items-center justify-center text-2xl mb-4 border-2 border-pink-600 cosmic-gradient font-bold">${userData.name[0]}</div><h2 class="text-xl font-bold">${userData.name}</h2><button onclick="localStorage.removeItem('vactra_user'); location.reload();" class="mt-10 text-red-500 text-sm">Sign Out</button></div>`; }
         }
         function mockLogin() {
             const n = prompt("Naam:"); const e = prompt("Email:");
             if(n && e) { userData = {name:n, email:e}; localStorage.setItem('vactra_user', JSON.stringify(userData)); updateProfileUI(); }
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(reg => console.log('PWA Connected!')).catch(err => {});
+            });
         }
     </script>
 </body>
