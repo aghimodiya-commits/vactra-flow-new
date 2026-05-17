@@ -1,19 +1,21 @@
 {
-  "name": "Vactra Flow",
-  "short_name": "VFlow",
+  "name": "Vactra Flow Pro",
+  "short_name": "VactraFlow",
   "start_url": "social-app-FIXED.html",
   "display": "standalone",
-  "background_color": "#01010d",
+  "background_color": "#000000",
   "theme_color": "#FF1493",
+  "orientation": "portrait",
+  "id": "/vactra-flow-pro-app",
   "icons": [
     {
-      "src": "https://i.postimg.cc/9F7Pz6Yt/vactra-flow-cosmic-apple.png",
+      "src": "vactra-flow-cosmic-apple.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.postimg.cc/9F7Pz6Yt/vactra-flow-cosmic-apple.png",
+      "src": "vactra-flow-cosmic-apple.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
