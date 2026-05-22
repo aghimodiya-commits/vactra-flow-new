@@ -70,16 +70,12 @@
     <input type="file" id="fileInput" accept="video/*" class="hidden">
 
     <script>
-        // Inline Blob Service Worker (For PWA Detection)
+        // Clean & Correct Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', e => self.skipWaiting());
-                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl).catch(err => console.log('SW failed:', err));
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker Active!', reg))
+                    .catch(err => console.log('SW Registration Failed:', err));
             });
         }
 
