@@ -1,190 +1,22 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - PWA Pro</title>
-    
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Vactra%20Flow%22%2C%22short_name%22%3A%22VactraFlow%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F1384%2F1384060.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #000; color: white; font-family: sans-serif; margin: 0; overflow-x: hidden; }
-        .screen { height: 100vh; width: 100vw; display: none; position: fixed; top: 0; left: 0; }
-        .active { display: block; }
-        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-        .grid-item { aspect-ratio: 9/16; background: #111; overflow: hidden; position: relative; border: 1px solid #222; }
-        .grid-item video { width: 100%; height: 100%; object-fit: cover; }
-        nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
-        .liked { color: #ff0000 !important; }
-    </style>
-</head>
-<body>
-
-    <div id="home-screen" class="screen active">
-        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
-            <h1 class="text-xl font-black italic flex items-center gap-2">
-                VACTRA <span class="text-red-600">FLOW</span>
-                <span class="text-xl">🍎</span>
-            </h1>
-        </header>
-        <div class="feed" id="mainFeed" onscroll="handleScroll()"></div>
-    </div>
-
-    <div id="profile-screen" class="screen bg-black overflow-y-auto pb-20">
-        <div class="p-4 border-b border-zinc-900 flex items-center sticky top-0 bg-black z-10">
-            <i class="fas fa-arrow-left mr-4 cursor-pointer" onclick="showScreen('home-screen')"></i>
-            <span id="display-name" class="font-bold">Asheesh Kumar</span>
-        </div>
-        <div id="auth-content" class="p-6 text-center"></div>
-        <div class="border-t border-zinc-900">
-            <div class="flex justify-around p-3 text-sm font-bold text-gray-400">
-                <span class="text-white border-b-2 border-white pb-1">VIDEOS</span>
-                <span>SHORTS</span>
-            </div>
-            <div id="user-video-grid" class="video-grid"></div>
-        </div>
-    </div>
-
-    <div id="edit-screen" class="screen bg-black">
-        <div class="p-4 flex items-center justify-between">
-            <i class="fas fa-times text-xl cursor-pointer" onclick="showScreen('home-screen')"></i>
-            <button onclick="publishVideo()" class="bg-blue-600 text-white px-4 py-1.5 rounded-full font-bold">UPLOAD</button>
-        </div>
-        <div id="preview-box" class="w-full h-[60vh] bg-zinc-900"></div>
-        <div class="p-4">
-            <input type="text" id="vTitle" placeholder="Video Title..." class="w-full bg-zinc-900 p-3 rounded-lg outline-none text-white">
-        </div>
-    </div>
-
-    <nav>
-        <div onclick="showScreen('home-screen')" class="cursor-pointer"><i class="fas fa-home text-xl"></i></div>
-        <div onclick="document.getElementById('fileInput').click()" class="text-3xl cursor-pointer">+</div>
-        <div onclick="showScreen('profile-screen')" class="cursor-pointer"><i class="fas fa-user-circle text-xl"></i></div>
-    </nav>
-
-    <input type="file" id="fileInput" accept="video/*" class="hidden">
-
-    <script>
-        // PWA SERVICE WORKER WITH MEMORY CLEANUP
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', e => self.skipWaiting());
-                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl).catch(err => console.log('SW failed:', err));
-            });
-        }
-
-        let currentUrl = "";
-        let userData = { name: "Asheesh Kumar", email: "ashish@vactra.com" };
-
-        window.onload = function() {
-            loadVideos();
-            updateProfileUI();
-        };
-
-        function loadVideos() {
-            const saved = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
-            const feed = document.getElementById('mainFeed');
-            const grid = document.getElementById('user-video-grid');
-            
-            feed.innerHTML = ""; 
-            grid.innerHTML = "";
-
-            saved.forEach(v => {
-                renderVideo(v.url, v.title);
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                item.innerHTML = `<video src="${v.url}" muted></video>`;
-                grid.appendChild(item);
-            });
-            handleScroll();
-        }
-
-        function updateProfileUI() {
-            const content = document.getElementById('auth-content');
-            content.innerHTML = `
-                <div class="w-20 h-20 bg-gradient-to-tr from-red-600 to-red-500 rounded-full mx-auto flex items-center justify-center text-2xl font-bold mb-3 shadow-lg shadow-red-900/50">A</div>
-                <h2 class="text-xl font-bold">${userData.name}</h2>
-                <div class="flex justify-center gap-6 mt-4 text-gray-400 text-xs">
-                    <span><b>45K</b> Subs</span> <span><b>1.2M</b> Likes</span>
-                </div>
-            `;
-        }
-
-        function handleScroll() {
-            const videos = document.querySelectorAll('video');
-            videos.forEach(v => {
-                const rect = v.getBoundingClientRect();
-                if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
-                    if (v.paused) v.play().catch(() => {});
-                } else {
-                    v.pause();
-                }
-            });
-        }
-
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id !== 'home-screen') {
-                document.querySelectorAll('video').forEach(v => v.pause());
-            } else {
-                handleScroll();
-            }
-        }
-
-        document.getElementById('fileInput').onchange = function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                currentUrl = URL.createObjectURL(file);
-                document.getElementById('preview-box').innerHTML = `<video src="${currentUrl}" class="w-full h-full object-cover" autoplay muted loop></video>`;
-                showScreen('edit-screen');
-            }
-        };
-
-        function publishVideo() {
-            const t = document.getElementById('vTitle').value || "New Short";
-            const db = JSON.parse(localStorage.getItem('vactra_pro_db')) || [];
-            
-            db.unshift({url: currentUrl, title: t});
-            localStorage.setItem('vactra_pro_db', JSON.stringify(db));
-            
-            loadVideos();
-            showScreen('home-screen');
-            document.getElementById('vTitle').value = "";
-            alert("Bhai, Aapka Short Channel par upload ho gaya! 🚀");
-        }
-
-        function renderVideo(url, title) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <video loop src="${url}" onclick="this.paused?this.play():this.pause()"></video>
-                <div class="absolute bottom-24 left-4">
-                    <p class="font-bold flex items-center gap-1">@Asheesh_Kumar <span class="text-red-500 text-xs">✓</span></p>
-                    <p class="text-sm mt-1 text-gray-200">${title}</p>
-                </div>
-                <div class="absolute right-4 bottom-32 flex flex-col gap-6 items-center z-20">
-                    <div onclick="toggleLike(this)" class="cursor-pointer text-center text-white"><i class="fas fa-heart text-2xl"></i><p class="text-[10px]">1.2M</p></div>
-                    <div class="text-center text-white"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px]">45K</p></div>
-                </div>`;
-            document.getElementById('mainFeed').appendChild(card);
-        }
-
-        function toggleLike(btn) {
-            btn.classList.toggle('liked');
-            const icon = btn.querySelector('i');
-            icon.style.color = btn.classList.contains('liked') ? 'red' : 'white';
-        }
-    </script>
-</body>
-</html>
+{
+  "name": "Vactra Flow",
+  "short_name": "VactraFlow",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
