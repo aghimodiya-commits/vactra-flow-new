@@ -1,7 +1,7 @@
 {
   "name": "Vactra Flow",
   "short_name": "VFlow",
-  "start_url": "index.html",
+  "start_url": "social-app-FIXED.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
