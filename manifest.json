@@ -1,14 +1,14 @@
 {
   "name": "Vactra Flow",
-  "short_name": "VactraFlow",
-  "start_url": "/",
+  "short_name": "VFlow",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
     {
       "src": "https://raw.githubusercontent.com/AGHIMODIYA/vactraflow/main/1024.png",
-      "sizes": "1024x1024",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }
