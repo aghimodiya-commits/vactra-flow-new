@@ -1,16 +1,21 @@
 {
   "name": "Vactra Flow",
   "short_name": "VFlow",
+  "description": "Vactra Flow is the ultimate social video experience.",
   "start_url": "social-app-FIXED.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "hi",
   "icons": [
     {
-      "src": "./1024.png",
+      "src": "https://aghimodiya-commits.github.io/vactra-flow-new/1024.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["social", "entertainment"]
 }
