@@ -2,11 +2,11 @@
   "name": "Vactra Flow",
   "short_name": "Vactra Flow",
   "description": "Ek behtareen video sharing aur social flow app.",
-  "categories": ["social", "entertainment"],
   "start_url": "social-app-FIXED.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "1024.png",
