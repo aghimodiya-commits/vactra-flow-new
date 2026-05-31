@@ -5,15 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vactra Flow - Pro</title>
     
-    <link rel="manifest" href="manifest.json">
-    
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://trusted.cdn.com https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;">
-    
-    <script src="security.js" defer></script>
-    
+    <!-- CSP: Tailwind aur FontAwesome ko allow kiya gaya hai -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src https://cdnjs.cloudflare.com;">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Aapki Security File -->
+    <script src="security.js" defer></script>
+
+    <style>
+        /* CSS Wahi purana rakha hai taaki design na bigde */
+        body { background-color: #000; color: white; font-family: sans-serif; overflow: hidden; margin: 0; }
+        .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
+        .active { display: block; }
+        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
+        .feed::-webkit-scrollbar { display: none; }
+        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .sidebar { position: absolute; right: 12px; bottom: 160px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
+        .icon-box { text-align: center; cursor: pointer; }
+        .bottom-info { position: absolute; bottom: 120px; left: 15px; z-index: 1000; max-width: 80%; }
+        nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; cursor: pointer; }
+        .active-nav { color: white; }
+        #video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .grid-item { aspect-ratio: 9/16; background: #111; overflow: hidden; position: relative; }
+        .input-group { background: #272727; padding: 12px; border-radius: 10px; margin-bottom: 12px; }
+        input { background: transparent; border: none; color: white; width: 100%; outline: none; }
+        #comment-panel { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #1c1c1c; border-radius: 20px 20px 0 0; z-index: 7000; transition: bottom 0.3s ease-out; display: flex; flex-direction: column; }
+        .show-comments { bottom: 0 !important; }
+    </style>
 </head>
 <body>
-    </body>
+    <!-- (Aapka original HTML body structure yahan waisa ka waisa rahega) -->
+    <!-- ... (Baki ka body code yahan paste karein) ... -->
+    <script>
+        // (Aapka original JavaScript code yahan paste karein)
+    </script>
+</body>
 </html>
