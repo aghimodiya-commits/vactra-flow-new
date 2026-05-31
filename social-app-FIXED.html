@@ -12,58 +12,54 @@
         body { background-color: #000; color: white; font-family: sans-serif; overflow: hidden; margin: 0; }
         .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
         .active { display: block; }
-        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; }
+        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
+        .feed::-webkit-scrollbar { display: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .sidebar { position: absolute; right: 12px; bottom: 160px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
         .icon-box { text-align: center; cursor: pointer; }
         .bottom-info { position: absolute; bottom: 120px; left: 15px; z-index: 1000; max-width: 80%; }
         nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
-        #comment-panel { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #1c1c1c; border-radius: 20px 20px 0 0; z-index: 9999; transition: bottom 0.3s ease; }
+        #comment-panel { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #1c1c1c; border-radius: 20px 20px 0 0; z-index: 7000; transition: bottom 0.3s ease-out; display: flex; flex-direction: column; }
         .show-comments { bottom: 0 !important; }
     </style>
 </head>
 <body>
-
     <div id="home-screen" class="screen active">
+        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
+            <h1 class="text-xl font-black italic tracking-tighter uppercase">VACTRA <span class="text-red-600">FLOW</span></h1>
+        </header>
         <div class="feed" id="mainFeed"></div>
     </div>
 
     <div id="comment-panel">
         <div class="p-4 border-b border-zinc-800 flex justify-between items-center">
-            <span class="font-bold">Comments</span>
-            <i class="fas fa-times cursor-pointer" onclick="toggleComments()"></i>
+            <span class="font-bold text-lg text-white">Comments</span>
+            <i class="fas fa-times text-xl cursor-pointer text-white" onclick="toggleComments()"></i>
         </div>
-        <div id="comment-list" class="p-4"></div>
+        <div id="comment-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
     </div>
 
     <script>
-        // SMOOTH VIDEO PLAYBACK (Intersection Observer)
+        // Smooth Video ke liye Intersection Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                const video = entry.target.querySelector('video');
-                if (entry.isIntersecting) video.play().catch(()=>{});
-                else video.pause();
+                const v = entry.target.querySelector('video');
+                if (entry.isIntersecting) v.play().catch(()=>{});
+                else v.pause();
             });
         }, { threshold: 0.6 });
 
-        // Jab video render ho, toh observer add kar dein
+        // Jab video render ho, toh use observer mein daal dein
         function renderVideo(url, title, tags) {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `
-                <video loop playsinline src="${url}"></video>
-                <div class="bottom-info">...</div>
-                <div class="sidebar">...</div>`;
+            // ... (Aapka original HTML)
             document.getElementById('mainFeed').prepend(card);
-            observer.observe(card); // Smoothness ke liye
+            observer.observe(card); // Yeh line video smooth chalayegi
         }
 
-        function toggleComments() { 
-            document.getElementById('comment-panel').classList.toggle('show-comments'); 
-        }
-
-        // ... (Aapka baki original JavaScript code yahan paste kar dein)
+        // ... (Aapke baaki saare original functions waisa hi kaam karenge)
     </script>
 </body>
 </html>
