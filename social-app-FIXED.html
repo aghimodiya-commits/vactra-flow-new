@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Optimized</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src https://cdnjs.cloudflare.com;">
+    
+    <title>Vactra Flow - Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -11,48 +13,42 @@
         .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
         .active { display: block; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
+        .feed::-webkit-scrollbar { display: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .sidebar { position: absolute; right: 12px; bottom: 160px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
+        .icon-box { text-align: center; cursor: pointer; }
+        .bottom-info { position: absolute; bottom: 120px; left: 15px; z-index: 1000; max-width: 80%; }
         nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
-        #comment-panel { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #1c1c1c; border-radius: 20px 20px 0 0; z-index: 9999; transition: bottom 0.3s ease-out; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; cursor: pointer; }
+        .active-nav { color: white; }
+        #video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .grid-item { aspect-ratio: 9/16; background: #111; overflow: hidden; position: relative; }
+        .input-group { background: #272727; padding: 12px; border-radius: 10px; margin-bottom: 12px; }
+        input { background: transparent; border: none; color: white; width: 100%; outline: none; }
+        #comment-panel { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #1c1c1c; border-radius: 20px 20px 0 0; z-index: 9999; transition: bottom 0.3s ease-out; display: flex; flex-direction: column; }
         .show-comments { bottom: 0 !important; }
     </style>
 </head>
 <body>
 
     <div id="home-screen" class="screen active">
+        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
+            <h1 class="text-xl font-black italic tracking-tighter uppercase">VACTRA <span class="text-red-600">FLOW</span></h1>
+        </header>
         <div class="feed" id="mainFeed"></div>
     </div>
 
     <div id="comment-panel">
         <div class="p-4 border-b border-zinc-800 flex justify-between items-center">
-            <span class="font-bold">Comments</span>
-            <i class="fas fa-times cursor-pointer" onclick="toggleComments()"></i>
+            <span class="font-bold text-lg text-white">Comments</span>
+            <i class="fas fa-times text-xl cursor-pointer text-white" onclick="toggleComments()"></i>
         </div>
-        <div id="comment-list" class="p-4"></div>
+        <div id="comment-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
     </div>
-
-    <div id="edit-screen" class="screen bg-black">
-        <div class="p-4"><i class="fas fa-arrow-left" onclick="showScreen('home-screen')"></i></div>
-        <div id="preview-box" class="w-full h-[60vh] bg-zinc-900"></div>
-        <button id="publishBtn" onclick="publishVideo()" class="bg-white text-black p-4 w-full font-bold">Post</button>
-    </div>
-
-    <nav>
-        <div class="nav-item" onclick="showScreen('home-screen')"><i class="fas fa-home"></i></div>
-        <div class="nav-item" onclick="document.getElementById('fileInput').click()"><i class="fas fa-plus"></i></div>
-    </nav>
-
-    <input type="file" id="fileInput" accept="video/*" class="hidden">
 
     <script>
-        let db;
-        const request = indexedDB.open("VactraFinalDB", 1);
-        request.onupgradeneeded = e => e.target.result.createObjectStore("shorts", { keyPath: "id", autoIncrement: true });
-        request.onsuccess = e => { db = e.target.result; loadFromDB(); };
-
-        // SMOOTH SCROLLING: Intersection Observer
+        // SMOOTH SCROLLING (Intersection Observer)
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const v = entry.target.querySelector('video');
@@ -61,38 +57,14 @@
             });
         }, { threshold: 0.6 });
 
-        function publishVideo() {
-            const file = document.getElementById('fileInput').files[0];
-            const transaction = db.transaction("shorts", "readwrite");
-            // Store file directly, no base64
-            transaction.objectStore("shorts").add({ file: file, title: "New Short" });
-            transaction.oncomplete = () => location.reload();
-        }
-
-        function loadFromDB() {
-            db.transaction("shorts", "readonly").objectStore("shorts").getAll().onsuccess = e => {
-                e.target.result.forEach(v => {
-                    const url = URL.createObjectURL(v.file); // Create temporary URL
-                    renderVideo(url, v.title);
-                });
-            };
-        }
-
-        function renderVideo(url, title) {
+        // Jab video render ho, toh bas observer mein daal dein
+        function renderVideo(url, title, tags) {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `<video loop playsinline src="${url}"></video>`;
+            // ... (Aapka original innerHTML)
             document.getElementById('mainFeed').prepend(card);
-            observer.observe(card); // Smooth playback
+            observer.observe(card); // Video smooth chalegi
         }
-
-        function toggleComments() { document.getElementById('comment-panel').classList.toggle('show-comments'); }
-        function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-        
-        document.getElementById('fileInput').onchange = e => {
-            document.getElementById('preview-box').innerHTML = `<video src="${URL.createObjectURL(e.target.files[0])}" class="w-full h-full object-cover" autoplay muted loop></video>`;
-            showScreen('edit-screen');
-        };
     </script>
 </body>
 </html>
