@@ -1,74 +1,533 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Optimized</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #000; color: white; font-family: sans-serif; overflow: hidden; margin: 0; }
-        .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
-        .active { display: block; }
-        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        #comment-panel { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #1c1c1c; border-radius: 20px 20px 0 0; z-index: 9999; transition: bottom 0.3s ease-out; display: flex; flex-direction: column; }
-        .show-comments { bottom: 0 !important; }
-    </style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vactra Flow Pro</title>
+
+<!-- Security -->
+<meta http-equiv="Content-Security-Policy"
+content="
+default-src 'self' data: blob:;
+img-src 'self' data: blob:;
+media-src 'self' data: blob:;
+style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+font-src https://cdnjs.cloudflare.com;
+script-src 'self' 'unsafe-inline';
+connect-src 'self';
+frame-ancestors 'none';
+base-uri 'self';
+form-action 'self';
+">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+}
+
+body{
+background:#000;
+color:#fff;
+overflow:hidden;
+}
+
+.screen{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100vh;
+display:none;
+background:#000;
+}
+
+.active{
+display:block;
+}
+
+/* Header */
+
+header{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+padding:15px;
+z-index:1000;
+background:linear-gradient(
+to bottom,
+rgba(0,0,0,.9),
+transparent
+);
+}
+
+.logo{
+font-size:24px;
+font-weight:900;
+letter-spacing:1px;
+}
+
+.logo span{
+color:red;
+}
+
+/* Feed */
+
+.feed{
+height:100vh;
+overflow-y:auto;
+scroll-snap-type:y mandatory;
+}
+
+.feed::-webkit-scrollbar{
+display:none;
+}
+
+.card{
+height:100vh;
+scroll-snap-align:start;
+position:relative;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.card video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* Bottom Info */
+
+.bottom-info{
+position:absolute;
+left:15px;
+bottom:110px;
+z-index:500;
+max-width:75%;
+}
+
+.username{
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.title{
+font-size:15px;
+}
+
+.tags{
+font-size:12px;
+color:#4da6ff;
+margin-top:5px;
+}
+
+/* Sidebar */
+
+.sidebar{
+position:absolute;
+right:10px;
+bottom:120px;
+display:flex;
+flex-direction:column;
+gap:25px;
+z-index:500;
+}
+
+.icon-box{
+text-align:center;
+cursor:pointer;
+}
+
+.icon-box i{
+font-size:24px;
+}
+
+.icon-box p{
+font-size:11px;
+margin-top:4px;
+}
+
+/* Navigation */
+
+nav{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+height:65px;
+background:#000;
+border-top:1px solid #222;
+display:flex;
+justify-content:space-around;
+align-items:center;
+z-index:3000;
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:11px;
+color:#aaa;
+cursor:pointer;
+}
+
+.nav-item i{
+font-size:20px;
+margin-bottom:4px;
+}
+
+.active-nav{
+color:white;
+}
+
+.plus-btn{
+font-size:38px;
+cursor:pointer;
+}
+
+/* Shorts Grid */
+
+#video-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:2px;
+padding:2px;
+}
+
+.grid-item{
+aspect-ratio:9/16;
+background:#111;
+overflow:hidden;
+}
+
+.grid-item video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* Profile */
+
+.profile-box{
+padding:30px;
+text-align:center;
+}
+
+.avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#222;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:35px;
+margin:auto;
+border:2px solid red;
+}
+
+.btn{
+margin-top:20px;
+padding:12px;
+width:100%;
+border:none;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.login-btn{
+background:white;
+color:black;
+}
+
+.logout-btn{
+background:#ff2d2d;
+color:white;
+}
+
+/* Upload */
+
+#fileInput{
+display:none;
+}
+
+</style>
+
 </head>
+
 <body>
-    <div id="home-screen" class="screen active">
-        <div class="feed" id="mainFeed"></div>
-    </div>
 
-    <div id="comment-panel">
-        <div class="p-4 border-b border-zinc-800 flex justify-between items-center">
-            <span class="font-bold">Comments</span>
-            <i class="fas fa-times cursor-pointer" onclick="toggleComments()"></i>
-        </div>
-        <div id="comment-list" class="flex-1 overflow-y-auto p-4"></div>
-        <div class="p-4 border-t border-zinc-800">
-            <input type="text" id="commentInput" placeholder="Add a comment..." class="w-full bg-zinc-800 p-2 rounded text-white outline-none">
-        </div>
-    </div>
+<!-- HOME -->
 
-    <script>
-        // Performance Fix: Blob URL instead of Base64
-        function renderVideo(file, title, tags) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            // Blob URL banayein - video smooth chalegi
-            const url = URL.createObjectURL(file); 
-            card.innerHTML = `
-                <video loop playsinline src="${url}"></video>
-                <div class="bottom-info absolute bottom-20 left-4 z-10">
-                    <p class="font-bold">@User</p>
-                    <p class="text-sm">${title}</p>
-                </div>
-            `;
-            document.getElementById('mainFeed').prepend(card);
-            
-            // Auto-play only visible video
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const v = entry.target.querySelector('video');
-                    if (entry.isIntersecting) v.play(); else v.pause();
-                });
-            }, { threshold: 0.6 });
-            observer.observe(card);
-        }
+<div id="home-screen" class="screen active">
 
-        function toggleComments() { 
-            document.getElementById('comment-panel').classList.toggle('show-comments'); 
-        }
+<header>
+<div class="logo">
+VACTRA <span>FLOW</span>
+</div>
+</header>
 
-        // Upload Logic Update
-        document.getElementById('fileInput').onchange = e => {
-            const file = e.target.files[0];
-            // Yahan Base64 ki jagah सीधा file store karein
-            // ... (Aapka baki code)
-        };
-    </script>
+<div id="mainFeed" class="feed">
+
+<!-- Videos Here -->
+
+</div>
+
+</div>
+
+<!-- SHORTS -->
+
+<div id="shorts-screen" class="screen">
+
+<div style="padding:15px;border-bottom:1px solid #222;">
+<i class="fas fa-arrow-left"
+onclick="showScreen('home-screen')"></i>
+
+<span style="margin-left:10px;font-weight:bold;">
+Your Shorts
+</span>
+</div>
+
+<div id="video-grid"></div>
+
+</div>
+
+<!-- PROFILE -->
+
+<div id="profile-screen" class="screen">
+
+<div style="padding:15px;border-bottom:1px solid #222;">
+
+<i class="fas fa-arrow-left"
+onclick="showScreen('home-screen')"></i>
+
+<span style="margin-left:10px;font-weight:bold;">
+Profile
+</span>
+
+</div>
+
+<div id="profileContent"
+class="profile-box">
+
+</div>
+
+</div>
+
+<!-- Upload -->
+
+<input
+type="file"
+accept="video/*"
+id="fileInput">
+
+<!-- Navigation -->
+
+<nav>
+
+<div
+class="nav-item active-nav"
+onclick="showScreen('home-screen')">
+
+<i class="fas fa-home"></i>
+<span>Home</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="showScreen('shorts-screen')">
+
+<i class="fas fa-play-circle"></i>
+<span>Shorts</span>
+
+</div>
+
+<div
+class="plus-btn"
+onclick="document.getElementById('fileInput').click()">
+
++
+
+</div>
+
+<div class="nav-item">
+
+<i class="fas fa-layer-group"></i>
+<span>Subs</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="showProfile()">
+
+<i class="fas fa-user-circle"></i>
+<span>You</span>
+
+</div>
+
+</nav>
+
+<script>
+
+/* XSS Protection */
+
+function sanitize(text){
+
+const div=document.createElement("div");
+
+div.textContent=text;
+
+return div.innerHTML;
+
+}
+
+/* Screen Switch */
+
+function showScreen(id){
+
+document
+.querySelectorAll(".screen")
+.forEach(screen=>{
+
+screen.classList.remove("active");
+
+});
+
+document
+.getElementById(id)
+.classList.add("active");
+
+}
+
+/* Profile */
+
+let userData=
+JSON.parse(
+localStorage.getItem("vactra_user")
+)||null;
+
+function showProfile(){
+
+updateProfile();
+
+showScreen("profile-screen");
+
+}
+
+function updateProfile(){
+
+const box=
+document.getElementById(
+"profileContent"
+);
+
+if(!userData){
+
+box.innerHTML=`
+
+<button
+class="btn login-btn"
+onclick="loginUser()">
+
+Sign In
+
+</button>
+
+`;
+
+}else{
+
+box.innerHTML=`
+
+<div class="avatar">
+
+${sanitize(
+userData.name[0]
+)}
+
+</div>
+
+<h2 style="margin-top:15px;">
+${sanitize(
+userData.name
+)}
+</h2>
+
+<p>
+${sanitize(
+userData.email
+)}
+</p>
+
+<button
+class="btn logout-btn"
+onclick="logoutUser()">
+
+Logout
+
+</button>
+
+`;
+
+}
+
+}
+
+function loginUser(){
+
+const name=
+prompt("Enter Name");
+
+const email=
+prompt("Enter Email");
+
+if(!name||!email){
+return;
+}
+
+userData={
+name:name,
+email:email
+};
+
+localStorage.setItem(
+"vactra_user",
+JSON.stringify(userData)
+);
+
+updateProfile();
+
+}
+
+function logoutUser(){
+
+localStorage.removeItem(
+"vactra_user"
+);
+
+location.reload();
+
+}
+
+updateProfile();
+
+</script>
+
 </body>
 </html>
