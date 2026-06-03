@@ -52,7 +52,7 @@
         </div>
         <div id="comment-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
         <div class="p-4 border-t border-zinc-800">
-            <input type="text" id="commentInput" placeholder="Add a comment..." class="w-full bg-zinc-700 p-2 rounded-lg text-white outline-none">
+            <input type="text" id="commentInput" placeholder="Add a comment..." onkeypress="if(event.key === 'Enter') sendComment()" class="w-full bg-zinc-700 p-2 rounded-lg text-white outline-none">
         </div>
     </div>
 
@@ -92,13 +92,8 @@
         let userData = JSON.parse(localStorage.getItem('vactra_user')) || null;
         let db;
 
-        // Intersection Observer for Smooth Video Playback
         const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const v = entry.target;
-                if (entry.isIntersecting) v.play().catch(()=>{});
-                else v.pause();
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.play().catch(()=>{}); else entry.target.pause(); });
         }, { threshold: 0.6 });
 
         const request = indexedDB.open("VactraFinalDB", 1);
@@ -107,9 +102,7 @@
 
         function loadFromDB() {
             const store = db.transaction("shorts", "readonly").objectStore("shorts");
-            store.getAll().onsuccess = e => {
-                e.target.result.forEach(v => { renderVideo(v.url, v.title, v.tags); addToGrid(v.url); });
-            };
+            store.getAll().onsuccess = e => { e.target.result.forEach(v => { renderVideo(v.url, v.title, v.tags); addToGrid(v.url); }); };
         }
 
         function publishVideo() {
@@ -124,48 +117,40 @@
                 const base64 = reader.result;
                 const transaction = db.transaction("shorts", "readwrite");
                 transaction.objectStore("shorts").add({ url: base64, title: t, tags: tags });
-                transaction.oncomplete = () => { renderVideo(base64, t, tags); addToGrid(base64); showScreen('home-screen'); };
+                transaction.oncomplete = () => { renderVideo(base64, t, tags); addToGrid(base64); btn.innerText = "Next"; btn.disabled = false; showScreen('home-screen'); };
             };
         }
 
         function renderVideo(url, title, tags) {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `
-                <video loop playsinline src="${url}"></video>
-                <div class="bottom-info">
-                    <p class="font-bold">@${userData ? userData.name.replace(/\s/g, '_') : 'User'}</p>
-                    <p class="text-sm mt-1">${title}</p>
-                </div>
-                <div class="sidebar">
-                    <div class="icon-box" onclick="this.querySelector('i').classList.toggle('text-red-500')"><i class="fas fa-heart text-2xl"></i><p class="text-[10px]">Like</p></div>
-                    <div class="icon-box" onclick="toggleComments()"><i class="fas fa-comment-dots text-2xl"></i><p class="text-[10px]">Chat</p></div>
-                    <div class="icon-box" onclick="shareVideo('${title}')"><i class="fas fa-share text-2xl"></i><p class="text-[10px]">Share</p></div>
-                </div>`;
+            card.innerHTML = `<video loop playsinline src="${url}"></video><div class="bottom-info"><p class="font-bold">@${userData ? userData.name.replace(/\s/g, '_') : 'User'}</p><p class="text-sm mt-1">${title}</p></div><div class="sidebar"><div class="icon-box" onclick="this.querySelector('i').classList.toggle('text-red-500')"><i class="fas fa-heart text-2xl"></i></div><div class="icon-box" onclick="toggleComments()"><i class="fas fa-comment-dots text-2xl"></i></div><div class="icon-box" onclick="shareVideo('${title}')"><i class="fas fa-share text-2xl"></i></div></div>`;
             const v = card.querySelector('video');
             videoObserver.observe(v);
             document.getElementById('mainFeed').prepend(card);
         }
 
-        // SHARE FUNCTION FIXED
-        function shareVideo(title) {
-            if (navigator.share) { navigator.share({ title: title, text: 'Check this out on Vactra Flow!', url: window.location.href }); }
-            else { alert("Share not supported on this browser"); }
+        function shareVideo(title) { if (navigator.share) navigator.share({ title: title, url: window.location.href }); else alert("Sharing not supported"); }
+
+        function sendComment() {
+            const input = document.getElementById('commentInput');
+            const list = document.getElementById('comment-list');
+            if(input.value.trim() !== "") {
+                const div = document.createElement('div');
+                div.className = "bg-zinc-800 p-2 rounded text-sm";
+                div.innerText = (userData ? userData.name : 'User') + ": " + input.value;
+                list.appendChild(div);
+                input.value = "";
+            }
         }
 
-        function addToGrid(url) {
-            const div = document.createElement('div');
-            div.className = 'grid-item';
-            div.innerHTML = `<video src="${url}" class="w-full h-full object-cover" muted></video>`;
-            document.getElementById('video-grid').prepend(div);
-        }
-
+        function addToGrid(url) { const div = document.createElement('div'); div.className = 'grid-item'; div.innerHTML = `<video src="${url}" class="w-full h-full object-cover" muted></video>`; document.getElementById('video-grid').prepend(div); }
         function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
         function toggleComments() { document.getElementById('comment-panel').classList.toggle('show-comments'); }
-        document.getElementById('fileInput').onchange = e => { if(!userData) { alert("Login please!"); return; } selectedFile = e.target.files[0]; if (selectedFile) { document.getElementById('preview-box').innerHTML = `<video src="${URL.createObjectURL(selectedFile)}" class="w-full h-full object-cover" muted autoplay loop></video>`; showScreen('edit-screen'); } };
+        document.getElementById('fileInput').onchange = e => { if(!userData) { alert("Login first!"); return; } selectedFile = e.target.files[0]; if (selectedFile) { document.getElementById('preview-box').innerHTML = `<video src="${URL.createObjectURL(selectedFile)}" class="w-full h-full object-cover" muted autoplay loop></video>`; showScreen('edit-screen'); } };
         function handleProfileClick() { updateProfileUI(); showScreen('profile-screen'); }
         function updateProfileUI() { const content = document.getElementById('auth-content'); if (!userData) { content.innerHTML = `<button onclick="mockLogin()" class="bg-white text-black p-3 rounded-lg font-bold w-full">Gmail Sign in</button>`; } else { content.innerHTML = `<div class="text-center"><div class="w-20 h-20 bg-zinc-800 rounded-full mx-auto flex items-center justify-center text-2xl mb-4 border-2 border-red-600">${userData.name[0]}</div><h2 class="text-xl font-bold">${userData.name}</h2><button onclick="localStorage.removeItem('vactra_user'); location.reload();" class="mt-10 text-red-500 text-sm">Sign Out</button></div>`; } }
-        function mockLogin() { const n = prompt("Naam:"); const e = prompt("Email:"); if(n && e) { userData = {name:n, email:e}; localStorage.setItem('vactra_user', JSON.stringify(userData)); updateProfileUI(); } }
+        function mockLogin() { const n = prompt("Name:"); const e = prompt("Email:"); if(n && e) { userData = {name:n, email:e}; localStorage.setItem('vactra_user', JSON.stringify(userData)); updateProfileUI(); } }
     </script>
 </body>
 </html>
