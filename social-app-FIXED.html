@@ -11,6 +11,7 @@
         .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
         .active { display: block; }
         .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
+        .feed::-webkit-scrollbar { display: none; }
         .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .sidebar { position: absolute; right: 12px; bottom: 160px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
@@ -28,63 +29,138 @@
     </style>
 </head>
 <body>
-    <div id="home-screen" class="screen active"><div class="feed" id="mainFeed"></div></div>
+
+    <div id="home-screen" class="screen active">
+        <header class="fixed top-0 w-full p-4 z-[5000] flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
+            <h1 class="text-xl font-black italic tracking-tighter uppercase">VACTRA <span class="text-red-600">FLOW</span></h1>
+        </header>
+        <div class="feed" id="mainFeed"></div>
+    </div>
+
     <div id="shorts-screen" class="screen bg-black overflow-y-auto">
-        <div class="p-4 flex items-center"><i class="fas fa-arrow-left mr-4" onclick="showScreen('home-screen')"></i><span class="font-bold">Your Shorts</span></div>
+        <div class="p-4 border-b border-zinc-900 sticky top-0 bg-black z-10 flex items-center">
+            <i class="fas fa-arrow-left mr-4" onclick="showScreen('home-screen')"></i>
+            <span class="font-bold">Your Shorts</span>
+        </div>
         <div id="video-grid"></div>
     </div>
+
     <div id="comment-panel">
-        <div class="p-4 border-b border-zinc-800 flex justify-between"><span>Comments</span><i class="fas fa-times" onclick="toggleComments()"></i></div>
-        <div id="comment-list" class="flex-1 overflow-y-auto p-4"></div>
-        <div class="p-4 border-t border-zinc-800"><input type="text" id="commentInput" placeholder="Add a comment..." onkeypress="if(event.key === 'Enter') sendComment()" class="w-full bg-zinc-700 p-2 rounded text-white"></div>
+        <div class="p-4 border-b border-zinc-800 flex justify-between items-center">
+            <span class="font-bold text-lg text-white">Comments</span>
+            <i class="fas fa-times text-xl cursor-pointer text-white" onclick="toggleComments()"></i>
+        </div>
+        <div id="comment-list" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+        <div class="p-4 border-t border-zinc-800">
+            <input type="text" id="commentInput" placeholder="Add a comment..." onkeypress="if(event.key === 'Enter') sendComment()" class="w-full bg-zinc-700 p-2 rounded-lg text-white outline-none">
+        </div>
     </div>
+
     <div id="edit-screen" class="screen bg-black">
-        <div class="p-4 flex justify-between"><i class="fas fa-arrow-left" onclick="showScreen('home-screen')"></i><button id="publishBtn" onclick="publishVideo()" class="bg-white text-black px-4 rounded-full font-bold text-sm">Next</button></div>
-        <div id="preview-box" class="w-full h-[60vh] bg-zinc-900"></div>
-        <div class="p-4"><div class="input-group"><input type="text" id="vTitle" placeholder="Title..."></div></div>
+        <div class="p-4 flex items-center justify-between">
+            <i class="fas fa-arrow-left text-xl" onclick="showScreen('home-screen')"></i>
+            <span class="font-bold">Edit Short</span>
+            <button id="publishBtn" onclick="publishVideo()" class="bg-white text-black px-4 py-1.5 rounded-full font-bold text-sm">Next</button>
+        </div>
+        <div id="preview-box" class="w-full h-[60vh] bg-zinc-900 flex items-center justify-center"></div>
+        <div class="p-4">
+            <div class="input-group"><input type="text" id="vTitle" placeholder="Create a title..."></div>
+            <div class="input-group"><input type="text" id="vTags" placeholder="#Tags"></div>
+        </div>
     </div>
-    <div id="profile-screen" class="screen bg-zinc-950 p-6"><i class="fas fa-arrow-left" onclick="showScreen('home-screen')"></i><div id="auth-content" class="mt-10"></div></div>
+
+    <div id="profile-screen" class="screen bg-zinc-950">
+        <div class="p-4 border-b border-zinc-900 flex items-center">
+            <i class="fas fa-arrow-left mr-4" onclick="showScreen('home-screen')"></i>
+            <span class="font-bold">Account</span>
+        </div>
+        <div id="auth-content" class="p-6"></div>
+    </div>
+
     <nav>
-        <div class="nav-item" onclick="showScreen('home-screen')"><i class="fas fa-home"></i>Home</div>
-        <div class="nav-item" onclick="showScreen('shorts-screen')"><i class="fas fa-play-circle"></i>Shorts</div>
-        <div onclick="document.getElementById('fileInput').click()" class="text-4xl">+</div>
-        <div class="nav-item" onclick="handleProfileClick()"><i class="fas fa-user-circle"></i>You</div>
+        <div class="nav-item active-nav" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl mb-1"></i><span>Home</span></div>
+        <div class="nav-item" onclick="showScreen('shorts-screen')"><i class="fas fa-play-circle text-xl mb-1"></i><span>Shorts</span></div>
+        <div onclick="document.getElementById('fileInput').click()" class="text-4xl font-light cursor-pointer text-white">+</div>
+        <div class="nav-item"><i class="fas fa-layer-group text-xl mb-1"></i><span>Subs</span></div>
+        <div class="nav-item" onclick="handleProfileClick()"><i class="fas fa-user-circle text-xl mb-1"></i><span>You</span></div>
     </nav>
+
     <input type="file" id="fileInput" accept="video/*" class="hidden">
+
     <script>
+        let selectedFile = null;
+        let userData = JSON.parse(localStorage.getItem('vactra_user')) || null;
         let db;
-        const videoObserver = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) e.target.play(); else e.target.pause(); }); }, { threshold: 0.6 });
+
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.play().catch(()=>{}); else entry.target.pause(); });
+        }, { threshold: 0.6 });
+
         const request = indexedDB.open("VactraFinalDB", 1);
-        request.onupgradeneeded = e => { e.target.result.createObjectStore("shorts", { keyPath: "id", autoIncrement: true }); };
+        request.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("shorts", { keyPath: "id", autoIncrement: true }); };
         request.onsuccess = e => { db = e.target.result; loadFromDB(); };
+
         function loadFromDB() {
-            document.getElementById('mainFeed').innerHTML = "";
-            document.getElementById('video-grid').innerHTML = "";
-            db.transaction("shorts", "readonly").objectStore("shorts").getAll().onsuccess = e => {
-                e.target.result.forEach(v => { renderVideo(v.id, v.url, v.title); addToGrid(v.id, v.url); });
+            const feed = document.getElementById('mainFeed');
+            const grid = document.getElementById('video-grid');
+            feed.innerHTML = ""; grid.innerHTML = "";
+            const store = db.transaction("shorts", "readonly").objectStore("shorts");
+            store.getAll().onsuccess = e => { 
+                e.target.result.forEach(v => { 
+                    renderVideo(v.id, v.url, v.title, v.tags); 
+                    addToGrid(v.id, v.url); 
+                }); 
             };
         }
-        function deleteVideo(id) { if(confirm("Delete?")) { db.transaction("shorts", "readwrite").objectStore("shorts").delete(id).onsuccess = () => loadFromDB(); } }
+
         function publishVideo() {
-            const file = document.getElementById('fileInput').files[0];
+            const t = document.getElementById('vTitle').value || "New Short";
+            const tags = document.getElementById('vTags').value || "";
+            const btn = document.getElementById('publishBtn');
+            if (!selectedFile) return;
+            btn.innerText = "Uploading..."; btn.disabled = true;
             const reader = new FileReader();
-            reader.onload = e => {
-                db.transaction("shorts", "readwrite").objectStore("shorts").add({ url: e.target.result, title: document.getElementById('vTitle').value }).onsuccess = () => { loadFromDB(); showScreen('home-screen'); };
+            reader.readAsDataURL(selectedFile);
+            reader.onload = function() {
+                const base64 = reader.result;
+                const transaction = db.transaction("shorts", "readwrite");
+                transaction.objectStore("shorts").add({ url: base64, title: t, tags: tags });
+                transaction.oncomplete = () => { btn.innerText = "Next"; btn.disabled = false; loadFromDB(); showScreen('home-screen'); };
             };
-            reader.readAsDataURL(file);
         }
-        function renderVideo(id, url, title) {
+
+        function deleteVideo(id) {
+            if(confirm("Kya aap ye video delete karna chahte hain?")) {
+                const tx = db.transaction("shorts", "readwrite");
+                tx.objectStore("shorts").delete(id);
+                tx.oncomplete = () => loadFromDB();
+            }
+        }
+
+        function renderVideo(id, url, title, tags) {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `<video loop playsinline src="${url}"></video><div class="sidebar"><div class="icon-box" onclick="deleteVideo(${id})"><i class="fas fa-trash text-2xl text-red-500"></i></div><div class="icon-box" onclick="toggleComments()"><i class="fas fa-comment-dots text-2xl"></i></div></div>`;
-            videoObserver.observe(card.querySelector('video'));
+            card.innerHTML = `<video loop playsinline src="${url}"></video><div class="bottom-info"><p class="font-bold">@${userData ? userData.name.replace(/\s/g, '_') : 'User'}</p><p class="text-sm mt-1">${title}</p></div><div class="sidebar"><div class="icon-box"><i class="fas fa-heart text-2xl"></i></div><div class="icon-box" onclick="toggleComments()"><i class="fas fa-comment-dots text-2xl"></i></div><div class="icon-box" onclick="shareVideo('${title}')"><i class="fas fa-share text-2xl"></i></div><div class="icon-box" onclick="deleteVideo(${id})"><i class="fas fa-trash text-2xl text-red-500"></i></div></div>`;
+            const v = card.querySelector('video');
+            videoObserver.observe(v);
             document.getElementById('mainFeed').prepend(card);
         }
-        function addToGrid(id, url) { const div = document.createElement('div'); div.className = 'grid-item'; div.innerHTML = `<video src="${url}" muted></video>`; document.getElementById('video-grid').prepend(div); }
-        function sendComment() { const input = document.getElementById('commentInput'); document.getElementById('comment-list').innerHTML += `<div class="bg-zinc-800 p-2 my-2">${input.value}</div>`; input.value = ""; }
+
+        function addToGrid(id, url) { 
+            const div = document.createElement('div'); div.className = 'grid-item'; 
+            div.innerHTML = `<video src="${url}" class="w-full h-full object-cover" muted></video>`; 
+            document.getElementById('video-grid').prepend(div); 
+        }
+
+        // ... (Baaki functions wahi hain)
+        function shareVideo(title) { if (navigator.share) navigator.share({ title: title, url: window.location.href }); else alert("Sharing not supported"); }
+        function sendComment() { const input = document.getElementById('commentInput'); const list = document.getElementById('comment-list'); if(input.value.trim() !== "") { const div = document.createElement('div'); div.className = "bg-zinc-800 p-2 rounded text-sm"; div.innerText = (userData ? userData.name : 'User') + ": " + input.value; list.appendChild(div); input.value = ""; } }
         function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
         function toggleComments() { document.getElementById('comment-panel').classList.toggle('show-comments'); }
-        function handleProfileClick() { showScreen('profile-screen'); document.getElementById('auth-content').innerHTML = `<button onclick="localStorage.clear(); location.reload()" class="bg-red-600 p-3 w-full">Sign Out</button>`; }
+        document.getElementById('fileInput').onchange = e => { if(!userData) { alert("Login first!"); return; } selectedFile = e.target.files[0]; if (selectedFile) { document.getElementById('preview-box').innerHTML = `<video src="${URL.createObjectURL(selectedFile)}" class="w-full h-full object-cover" muted autoplay loop></video>`; showScreen('edit-screen'); } };
+        function handleProfileClick() { updateProfileUI(); showScreen('profile-screen'); }
+        function updateProfileUI() { const content = document.getElementById('auth-content'); if (!userData) { content.innerHTML = `<button onclick="mockLogin()" class="bg-white text-black p-3 rounded-lg font-bold w-full">Gmail Sign in</button>`; } else { content.innerHTML = `<div class="text-center"><div class="w-20 h-20 bg-zinc-800 rounded-full mx-auto flex items-center justify-center text-2xl mb-4 border-2 border-red-600">${userData.name[0]}</div><h2 class="text-xl font-bold">${userData.name}</h2><button onclick="localStorage.removeItem('vactra_user'); location.reload();" class="mt-10 text-red-500 text-sm">Sign Out</button></div>`; } }
+        function mockLogin() { const n = prompt("Name:"); const e = prompt("Email:"); if(n && e) { userData = {name:n, email:e}; localStorage.setItem('vactra_user', JSON.stringify(userData)); updateProfileUI(); } }
     </script>
 </body>
 </html>
