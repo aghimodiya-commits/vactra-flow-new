@@ -2,111 +2,53 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Reels & Shorts</title>
+    <title>Vactra Flow - Dual Mode</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; color: white; font-family: sans-serif; overflow: hidden; margin: 0; }
-        .screen { height: 100vh; width: 100vw; display: none; position: absolute; top: 0; left: 0; }
+        body { background: #000; color: white; margin: 0; }
+        .screen { display: none; height: 100vh; overflow-y: auto; }
         .active { display: block; }
-        .feed { height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
-        .feed::-webkit-scrollbar { display: none; }
-        .card { scroll-snap-align: start; height: 100vh; width: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .sidebar { position: absolute; right: 12px; bottom: 150px; display: flex; flex-direction: column; gap: 20px; z-index: 100; align-items: center; }
-        .icon-box { text-align: center; cursor: pointer; transition: 0.2s; }
-        .bottom-info { position: absolute; bottom: 80px; left: 15px; z-index: 100; max-width: 80%; }
-        nav { z-index: 500; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; cursor: pointer; }
-        .active-nav { color: white; }
-        #comment-panel { position: fixed; bottom: -100%; left: 0; width: 100%; height: 50vh; background: #111; border-radius: 20px 20px 0 0; z-index: 1000; transition: 0.3s; padding: 20px; }
-        .show-comments { bottom: 0 !important; }
+        .long-video { width: 100%; aspect-ratio: 16/9; background: #222; }
+        .short-video { width: 100%; aspect-ratio: 9/16; background: #000; }
     </style>
 </head>
 <body>
 
-    <div id="home-screen" class="screen active">
-        <div class="feed" id="mainFeed"></div>
+    <div id="home-screen" class="screen active p-2">
+        <h1 class="text-xl font-bold p-2">Home (Long Videos)</h1>
+        <div id="long-feed" class="space-y-4"></div>
     </div>
 
-    <div id="comment-panel">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="font-bold">Comments</h2>
-            <i class="fas fa-times cursor-pointer" onclick="toggleComments()"></i>
-        </div>
-        <div id="comment-list" class="h-4/5 overflow-y-auto mb-2 text-sm"></div>
-        <input type="text" id="commentInput" placeholder="Add a comment..." onkeypress="if(event.key === 'Enter') sendComment()" class="w-full bg-zinc-800 p-2 rounded-lg text-white">
+    <div id="shorts-screen" class="screen">
+        <h1 class="text-xl font-bold p-4">Shorts</h1>
+        <div id="short-feed"></div>
     </div>
 
-    <div id="upload-screen" class="screen bg-black flex flex-col items-center justify-center p-4">
-        <h2 class="mb-4">Upload Video</h2>
-        <input type="file" id="fileInput" accept="video/*" class="hidden">
-        <button onclick="document.getElementById('fileInput').click()" class="bg-red-600 px-6 py-2 rounded-full">Select Video</button>
-        <button onclick="showScreen('home-screen')" class="mt-4 text-gray-500">Cancel</button>
-    </div>
-
-    <nav>
-        <div class="nav-item active-nav" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl"></i></div>
-        <div class="nav-item" onclick="showScreen('upload-screen')"><i class="fas fa-plus-circle text-xl"></i></div>
+    <nav class="fixed bottom-0 w-full bg-black border-t border-gray-800 flex justify-around p-4">
+        <button onclick="showScreen('home-screen')">Home</button>
+        <button onclick="document.getElementById('uploadInput').click()">Upload</button>
+        <button onclick="showScreen('shorts-screen')">Shorts</button>
     </nav>
 
+    <input type="file" id="uploadInput" class="hidden" accept="video/*">
+
     <script>
-        let db;
-        const request = indexedDB.open("VactraFlowDB", 1);
-        request.onupgradeneeded = e => e.target.result.createObjectStore("videos", { keyPath: "id", autoIncrement: true });
-        request.onsuccess = e => { db = e.target.result; loadVideos(); };
-
-        function loadVideos() {
-            const feed = document.getElementById('mainFeed');
-            feed.innerHTML = "";
-            db.transaction("videos").objectStore("videos").getAll().onsuccess = e => {
-                e.target.result.forEach(v => renderVideo(v.id, v.url, v.title));
-            };
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        function renderVideo(id, url, title) {
-            const div = document.createElement('div');
-            div.className = 'card';
-            div.innerHTML = `
-                <video src="${url}" loop playsinline></video>
-                <div class="bottom-info"><p class="font-bold text-lg">${title}</p></div>
-                <div class="sidebar">
-                    <div class="icon-box" onclick="this.classList.toggle('text-red-500')"><i class="fas fa-heart text-2xl"></i></div>
-                    <div class="icon-box" onclick="toggleComments()"><i class="fas fa-comment text-2xl"></i></div>
-                    <div class="icon-box" onclick="navigator.share({title: '${title}'})"><i class="fas fa-share text-2xl"></i></div>
-                    <div class="icon-box" onclick="deleteVideo(${id})"><i class="fas fa-trash text-2xl text-red-500"></i></div>
-                </div>`;
-            document.getElementById('mainFeed').appendChild(div);
-            // Auto play logic
-            new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting ? e.target.querySelector('video').play() : e.target.querySelector('video').pause()), {threshold:0.5}).observe(div);
-        }
+        document.getElementById('uploadInput').onchange = e => {
+            const file = e.target.files[0];
+            const url = URL.createObjectURL(file);
+            const type = prompt("Is this a Short? (yes/no)");
 
-        function deleteVideo(id) {
-            const tx = db.transaction("videos", "readwrite");
-            tx.objectStore("videos").delete(id);
-            tx.oncomplete = loadVideos;
-        }
-
-        document.getElementById('fileInput').onchange = e => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                db.transaction("videos", "readwrite").objectStore("videos").add({ url: reader.result, title: "New Video" }).onsuccess = loadVideos;
-                showScreen('home-screen');
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        };
-
-        function toggleComments() { document.getElementById('comment-panel').classList.toggle('show-comments'); }
-        function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-        
-        function sendComment() {
-            const inp = document.getElementById('commentInput');
-            if(inp.value) {
-                document.getElementById('comment-list').innerHTML += `<p class="mb-2"><b>User:</b> ${inp.value}</p>`;
-                inp.value = "";
+            if (type === 'yes') {
+                document.getElementById('short-feed').innerHTML += `<video class="short-video" src="${url}" controls></video>`;
+            } else {
+                document.getElementById('long-feed').innerHTML += `<video class="long-video" src="${url}" controls></video>`;
             }
-        }
+        };
     </script>
 </body>
 </html>
