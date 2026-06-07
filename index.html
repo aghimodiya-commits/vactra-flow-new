@@ -3,52 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow Ultra-Fast</title>
+    <title>Vactra Flow - Instant</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #000; color: #fff; margin: 0; }
-        .feed { display: grid; grid-template-columns: 1fr; gap: 5px; }
-        /* GPU Acceleration ke liye */
-        video { 
-            width: 100%; 
-            background: #111; 
-            will-change: transform; 
-            backface-visibility: hidden;
-        }
-        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px; border-top: 1px solid #222; }
+        .feed { display: flex; flex-direction: column; gap: 10px; }
+        /* Video ko screen se bahar load hone se rokne ke liye */
+        video { width: 100%; aspect-ratio: 9/16; background: #111; object-fit: cover; }
     </style>
 </head>
 <body>
 
-    <div id="long-feed" class="feed active"></div>
+    <div id="feed" class="feed"></div>
 
-    <div class="nav">
-        <button onclick="document.getElementById('fileInput').click()" class="bg-red-600 px-8 py-2 rounded-full font-bold">Upload Video</button>
+    <div class="fixed bottom-0 w-full p-4 bg-black border-t border-zinc-800">
+        <button onclick="document.getElementById('fileInput').click()" class="w-full bg-red-600 py-3 rounded-xl font-bold">Upload & Play Instantly</button>
     </div>
 
-    <input type="file" id="fileInput" class="hidden" accept="video/mp4,video/webm">
+    <input type="file" id="fileInput" class="hidden" accept="video/*">
 
     <script>
         document.getElementById('fileInput').onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            // 1. URL banate hi UI update karein
-            const url = URL.createObjectURL(file);
-            
-            // 2. Video element ko lightweight banayein
-            const v = document.createElement('video');
-            v.src = url;
-            v.controls = true;
-            v.autoplay = false; 
-            v.muted = true;
-            v.setAttribute('playsinline', '');
-            
-            // 3. Screen par turant show karein
-            document.getElementById('long-feed').prepend(v);
-            
-            // Browser ko hint de rahe hain ki ye video load karni hai
-            v.load();
+            // 1. UI ko turant block hone se bachane ke liye requestAnimationFrame use kiya
+            requestAnimationFrame(() => {
+                const url = URL.createObjectURL(file);
+                
+                const v = document.createElement('video');
+                v.src = url;
+                v.muted = true;
+                v.playsInline = true;
+                v.className = "card";
+                
+                // 2. Video ko background mein ready karne ke liye
+                v.onloadedmetadata = () => {
+                    v.play(); // Metadata load hote hi chalayein
+                };
+
+                document.getElementById('feed').prepend(v);
+            });
         };
     </script>
 </body>
