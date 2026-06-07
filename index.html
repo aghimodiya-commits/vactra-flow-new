@@ -13,13 +13,19 @@
         .feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
         .card { height: 100vh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .sidebar { position: absolute; right: 15px; bottom: 150px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; }
+        .sidebar { position: absolute; right: 15px; bottom: 150px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
+        /* Search Bar Style */
+        .search-container { position: fixed; top: 10px; width: 90%; left: 5%; z-index: 100; }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; z-index: 100; }
     </style>
 </head>
 <body>
 
     <div id="home" class="screen active">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search videos..." oninput="searchVideos()" 
+                   class="w-full bg-zinc-800/80 p-2 pl-4 rounded-full text-sm outline-none text-white border border-zinc-700">
+        </div>
         <div class="feed" id="feed-container"></div>
     </div>
 
@@ -34,13 +40,24 @@
     <input type="file" id="fileInput" class="hidden" accept="video/*">
 
     <script>
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title') || "";
+                card.style.display = title.includes(query) ? "flex" : "none";
+            });
+        }
+
         document.getElementById('fileInput').onchange = (e) => {
             const file = e.target.files[0];
+            const title = prompt("Video ka naam:");
             if (!file) return;
             const url = URL.createObjectURL(file);
             
             const card = document.createElement('div');
             card.className = 'card';
+            card.setAttribute('data-title', (title || "").toLowerCase());
             card.innerHTML = `
                 <video src="${url}" loop playsinline autoplay muted></video>
                 <div class="sidebar">
