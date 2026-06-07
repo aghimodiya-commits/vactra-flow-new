@@ -10,13 +10,12 @@
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; overflow: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; }
         .active { display: block; }
-        .feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
-        .card { height: 100vh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; }
+        .feed { height: 90vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        .card { height: 90vh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .sidebar { position: absolute; right: 15px; bottom: 150px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
-        /* Search Box Overlay */
-        #search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 50; display: none; padding: 20px; }
-        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; z-index: 100; }
+        .nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 100; }
+        #search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: none; padding: 20px; }
     </style>
 </head>
 <body>
@@ -26,17 +25,19 @@
     </div>
 
     <div id="search-overlay">
-        <input type="text" id="searchInput" placeholder="Search videos..." oninput="searchVideos()" 
-               class="w-full bg-zinc-800 p-3 rounded-xl mt-10 text-white outline-none">
+        <div class="mt-10 flex gap-2">
+            <input type="text" id="searchInput" placeholder="Search videos..." oninput="searchVideos()" class="w-full bg-zinc-800 p-3 rounded-xl text-white outline-none">
+            <button onclick="document.getElementById('search-overlay').style.display='none'" class="text-white">Close</button>
+        </div>
         <div id="search-results" class="mt-5"></div>
     </div>
 
     <nav class="nav">
-        <i class="fas fa-home text-xl" onclick="showScreen('home')"></i>
-        <i class="fas fa-search text-xl" onclick="document.getElementById('search-overlay').style.display='block'"></i>
+        <div onclick="showScreen('home')" class="flex flex-col items-center"><i class="fas fa-home"></i><span>Home</span></div>
+        <div onclick="document.getElementById('search-overlay').style.display='block'" class="flex flex-col items-center"><i class="fas fa-search"></i><span>Search</span></div>
         <i class="fas fa-plus-square text-3xl" onclick="document.getElementById('fileInput').click()"></i>
-        <i class="fas fa-layer-group text-xl"></i>
-        <i class="fas fa-user-circle text-xl"></i>
+        <div class="flex flex-col items-center"><i class="fas fa-layer-group"></i><span>Subs</span></div>
+        <div class="flex flex-col items-center"><i class="fas fa-user-circle"></i><span>You</span></div>
     </nav>
 
     <input type="file" id="fileInput" class="hidden" accept="video/*">
@@ -52,8 +53,7 @@
             const query = document.getElementById('searchInput').value.toLowerCase();
             const results = document.getElementById('search-results');
             results.innerHTML = "";
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
+            document.querySelectorAll('.card').forEach(card => {
                 if (card.getAttribute('data-title').includes(query)) {
                     results.appendChild(card.cloneNode(true));
                 }
@@ -62,7 +62,7 @@
 
         document.getElementById('fileInput').onchange = (e) => {
             const file = e.target.files[0];
-            const title = prompt("Video title:");
+            const title = prompt("Enter video title:");
             if (!file) return;
             const url = URL.createObjectURL(file);
             const card = document.createElement('div');
