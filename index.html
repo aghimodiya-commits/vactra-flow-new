@@ -3,48 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow - Instant</title>
+    <title>Vactra Flow - Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #000; color: #fff; margin: 0; }
-        .feed { display: flex; flex-direction: column; gap: 10px; }
-        /* Video ko screen se bahar load hone se rokne ke liye */
-        video { width: 100%; aspect-ratio: 9/16; background: #111; object-fit: cover; }
+        .card { width: 100%; margin-bottom: 10px; background: #111; }
+        video { width: 100%; aspect-ratio: 16/9; }
     </style>
 </head>
 <body>
 
+    <div class="p-4">
+        <input type="text" id="searchInput" placeholder="Search videos by title..." 
+               oninput="filterVideos()" class="w-full bg-zinc-800 p-3 rounded-xl text-white outline-none">
+    </div>
+
     <div id="feed" class="feed"></div>
 
     <div class="fixed bottom-0 w-full p-4 bg-black border-t border-zinc-800">
-        <button onclick="document.getElementById('fileInput').click()" class="w-full bg-red-600 py-3 rounded-xl font-bold">Upload & Play Instantly</button>
+        <button onclick="document.getElementById('fileInput').click()" class="w-full bg-red-600 py-3 rounded-xl font-bold">Upload Video</button>
     </div>
 
     <input type="file" id="fileInput" class="hidden" accept="video/*">
 
     <script>
+        // Videos ko store karne ke liye array
+        let videoList = [];
+
         document.getElementById('fileInput').onchange = (e) => {
             const file = e.target.files[0];
-            if (!file) return;
+            const title = prompt("Video ka naam rakhein:", "My Video");
+            if (!file || !title) return;
 
-            // 1. UI ko turant block hone se bachane ke liye requestAnimationFrame use kiya
-            requestAnimationFrame(() => {
-                const url = URL.createObjectURL(file);
-                
-                const v = document.createElement('video');
-                v.src = url;
-                v.muted = true;
-                v.playsInline = true;
-                v.className = "card";
-                
-                // 2. Video ko background mein ready karne ke liye
-                v.onloadedmetadata = () => {
-                    v.play(); // Metadata load hote hi chalayein
-                };
-
-                document.getElementById('feed').prepend(v);
-            });
+            const url = URL.createObjectURL(file);
+            videoList.push({ title: title.toLowerCase(), url: url });
+            renderFeed(videoList);
         };
+
+        function renderFeed(list) {
+            const feed = document.getElementById('feed');
+            feed.innerHTML = "";
+            list.forEach(v => {
+                feed.innerHTML += `
+                    <div class="card" data-title="${v.title}">
+                        <p class="p-2 text-sm">${v.title.toUpperCase()}</p>
+                        <video src="${v.url}" controls></video>
+                    </div>`;
+            });
+        }
+
+        function filterVideos() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title');
+                if (title.includes(query)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
     </script>
 </body>
 </html>
