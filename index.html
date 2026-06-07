@@ -2,35 +2,37 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Vactra Flow - Dual Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vactra Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; color: white; margin: 0; }
-        .screen { display: none; height: 100vh; overflow-y: auto; }
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; }
+        .screen { display: none; padding-bottom: 70px; }
         .active { display: block; }
-        .long-video { width: 100%; aspect-ratio: 16/9; background: #222; }
-        .short-video { width: 100%; aspect-ratio: 9/16; background: #000; }
+        .video-container { width: 100%; margin-bottom: 20px; background: #111; }
+        video { width: 100%; display: block; }
+        nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #333; display: flex; justify-content: space-around; padding: 15px; }
     </style>
 </head>
 <body>
 
-    <div id="home-screen" class="screen active p-2">
-        <h1 class="text-xl font-bold p-2">Home (Long Videos)</h1>
-        <div id="long-feed" class="space-y-4"></div>
+    <div id="home" class="screen active">
+        <h1 class="p-4 text-xl font-bold">Home (Long Videos)</h1>
+        <div id="long-feed"></div>
     </div>
 
-    <div id="shorts-screen" class="screen">
-        <h1 class="text-xl font-bold p-4">Shorts</h1>
+    <div id="shorts" class="screen">
+        <h1 class="p-4 text-xl font-bold">Shorts</h1>
         <div id="short-feed"></div>
     </div>
 
-    <nav class="fixed bottom-0 w-full bg-black border-t border-gray-800 flex justify-around p-4">
-        <button onclick="showScreen('home-screen')">Home</button>
-        <button onclick="document.getElementById('uploadInput').click()">Upload</button>
-        <button onclick="showScreen('shorts-screen')">Shorts</button>
+    <nav>
+        <button onclick="showScreen('home')">Home</button>
+        <button onclick="document.getElementById('fileInput').click()" class="bg-red-600 px-4 py-1 rounded">Upload</button>
+        <button onclick="showScreen('shorts')">Shorts</button>
     </nav>
 
-    <input type="file" id="uploadInput" class="hidden" accept="video/*">
+    <input type="file" id="fileInput" class="hidden" accept="video/*">
 
     <script>
         function showScreen(id) {
@@ -38,15 +40,19 @@
             document.getElementById(id).classList.add('active');
         }
 
-        document.getElementById('uploadInput').onchange = e => {
+        document.getElementById('fileInput').onchange = (e) => {
             const file = e.target.files[0];
             const url = URL.createObjectURL(file);
-            const type = prompt("Is this a Short? (yes/no)");
-
-            if (type === 'yes') {
-                document.getElementById('short-feed').innerHTML += `<video class="short-video" src="${url}" controls></video>`;
+            const isShort = confirm("Kya ye Shorts video hai? (OK = Yes, Cancel = No)");
+            
+            const videoHTML = `<div class="video-container"><video src="${url}" controls></video></div>`;
+            
+            if (isShort) {
+                document.getElementById('short-feed').innerHTML += videoHTML;
+                alert("Shorts mein upload ho gaya!");
             } else {
-                document.getElementById('long-feed').innerHTML += `<video class="long-video" src="${url}" controls></video>`;
+                document.getElementById('long-feed').innerHTML += videoHTML;
+                alert("Home mein upload ho gaya!");
             }
         };
     </script>
