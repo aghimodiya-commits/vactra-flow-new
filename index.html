@@ -3,38 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow</title>
+    <title>Vactra Flow - Smooth</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; }
-        .screen { display: none; padding-bottom: 70px; }
-        .active { display: block; }
-        .video-container { width: 100%; margin-bottom: 20px; background: #111; }
-        video { width: 100%; display: block; }
-        nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #333; display: flex; justify-content: space-around; padding: 15px; }
+        body { background: #000; color: #fff; margin: 0; overflow-x: hidden; }
+        .feed { display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
+        .video-box { background: #111; min-height: 200px; width: 100%; }
+        video { width: 100%; height: auto; display: block; }
+        nav { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; }
+        .screen { display: none; } .active { display: block; }
     </style>
 </head>
 <body>
 
     <div id="home" class="screen active">
-        <h1 class="p-4 text-xl font-bold">Home (Long Videos)</h1>
-        <div id="long-feed"></div>
+        <h2 class="p-4 font-bold">Home (Long)</h2>
+        <div id="long-feed" class="feed"></div>
     </div>
 
     <div id="shorts" class="screen">
-        <h1 class="p-4 text-xl font-bold">Shorts</h1>
-        <div id="short-feed"></div>
+        <h2 class="p-4 font-bold">Shorts</h2>
+        <div id="short-feed" class="feed"></div>
     </div>
 
     <nav>
         <button onclick="showScreen('home')">Home</button>
-        <button onclick="document.getElementById('fileInput').click()" class="bg-red-600 px-4 py-1 rounded">Upload</button>
+        <button onclick="document.getElementById('fileInput').click()" class="bg-red-600 px-6 py-1 rounded-full">Upload</button>
         <button onclick="showScreen('shorts')">Shorts</button>
     </nav>
-
     <input type="file" id="fileInput" class="hidden" accept="video/*">
 
     <script>
+        // Smooth Observer: Sirf wahi video play hogi jo screen par hai
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) { video.play(); } 
+                else { video.pause(); }
+            });
+        }, { threshold: 0.5 });
+
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -43,17 +51,22 @@
         document.getElementById('fileInput').onchange = (e) => {
             const file = e.target.files[0];
             const url = URL.createObjectURL(file);
-            const isShort = confirm("Kya ye Shorts video hai? (OK = Yes, Cancel = No)");
+            const isShort = confirm("Shorts mein daalein?");
             
-            const videoHTML = `<div class="video-container"><video src="${url}" controls></video></div>`;
+            const videoElem = document.createElement('video');
+            videoElem.src = url;
+            videoElem.muted = true;
+            videoElem.playsInline = true;
+            videoElem.preload = "none"; // MB bachane ke liye (sirf play hone par load hogi)
             
-            if (isShort) {
-                document.getElementById('short-feed').innerHTML += videoHTML;
-                alert("Shorts mein upload ho gaya!");
-            } else {
-                document.getElementById('long-feed').innerHTML += videoHTML;
-                alert("Home mein upload ho gaya!");
-            }
+            const div = document.createElement('div');
+            div.className = 'video-box';
+            div.appendChild(videoElem);
+            
+            if (isShort) document.getElementById('short-feed').appendChild(div);
+            else document.getElementById('long-feed').appendChild(div);
+            
+            observer.observe(videoElem);
         };
     </script>
 </body>
