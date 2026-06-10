@@ -9,7 +9,7 @@
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; overflow: hidden; }
         .feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
-        .card { height: 100vh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
+        .card { height: 100vh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .sidebar { position: absolute; right: 15px; bottom: 150px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
         .nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 50; }
@@ -22,7 +22,7 @@
     <div class="feed" id="feed-container"></div>
 
     <div id="search-overlay">
-        <input type="text" id="searchInput" placeholder="Search videos by title..." oninput="searchVideos()" class="w-full bg-zinc-800 p-3 mt-10 rounded-xl outline-none">
+        <input type="text" id="searchInput" placeholder="Search videos..." oninput="searchVideos()" class="w-full bg-zinc-800 p-3 mt-10 rounded-xl outline-none">
         <button onclick="document.getElementById('search-overlay').style.display='none'" class="mt-4 text-gray-400">Close</button>
         <div id="search-results" class="mt-5"></div>
     </div>
@@ -49,7 +49,7 @@
 
         document.getElementById('fileInput').onchange = (e) => {
             const file = e.target.files[0];
-            const title = prompt("Enter video title:") || "My Video";
+            const title = prompt("Enter video title:") || "Video";
             const url = URL.createObjectURL(file);
             const card = document.createElement('div');
             card.className = 'card';
@@ -60,6 +60,7 @@
                     <i class="fas fa-heart text-3xl cursor-pointer" onclick="this.classList.toggle('liked')"></i>
                     <i class="fas fa-comment text-3xl cursor-pointer"></i>
                     <i class="fas fa-share text-3xl cursor-pointer"></i>
+                    <a href="${url}" download="${title}.mp4"><i class="fas fa-download text-3xl text-blue-500 cursor-pointer"></i></a>
                     <i class="fas fa-trash text-3xl text-red-500 cursor-pointer" onclick="this.parentElement.parentElement.remove()"></i>
                 </div>
             `;
