@@ -12,17 +12,16 @@
         .card { height: 100vh; scroll-snap-align: start; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Buttons z-index badha diya hai */
-        .top-ui { position: fixed; top: 10px; width: 100%; z-index: 9999; display: flex; justify-content: space-between; padding: 10px 20px; }
-        .sidebar { position: absolute; right: 15px; bottom: 80px; z-index: 9999; display: flex; flex-direction: column; gap: 20px; }
-        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; z-index: 9999; }
+        /* Buttons z-index extreme high */
+        .search-area { position: fixed; top: 10px; width: 100%; z-index: 99999; display: flex; justify-content: center; gap: 10px; }
+        .sidebar { position: absolute; right: 15px; bottom: 80px; z-index: 99998; display: flex; flex-direction: column; gap: 20px; }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; z-index: 99999; }
     </style>
 </head>
 <body>
 
-    <div class="top-ui">
+    <div class="search-area">
         <input type="text" id="searchInput" placeholder="Search..." oninput="filterFeed()" class="bg-zinc-800 text-white p-2 rounded-lg w-3/4 outline-none border border-gray-600">
-        <i class="fas fa-search text-white text-xl mt-2"></i>
     </div>
 
     <div class="feed" id="feed-container"></div>
@@ -55,7 +54,7 @@
                 <div class="sidebar">
                     <i class="fas fa-heart text-3xl"></i>
                     <i class="fas fa-share text-3xl"></i>
-                    <a href="${url}" download="${title}.mp4"><i class="fas fa-download text-3xl text-blue-400"></i></a>
+                    <a href="${url}" download="${title}.mp4" style="color: cyan;"><i class="fas fa-download text-3xl"></i></a>
                     <i class="fas fa-trash text-3xl text-red-500" onclick="this.parentElement.parentElement.remove()"></i>
                 </div>
             `;
