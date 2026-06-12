@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Flow</title>
+    <title>Vactra Flow Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,23 +12,23 @@
         .card { height: 100vh; scroll-snap-align: start; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Buttons z-index extreme high */
-        .search-container { position: fixed !important; top: 20px !important; width: 90% !important; left: 5% !important; z-index: 999999 !important; }
-        .sidebar { position: absolute !important; right: 15px !important; bottom: 100px !important; z-index: 999998 !important; display: flex; flex-direction: column; gap: 20px; }
-        .nav { position: fixed !important; bottom: 0 !important; width: 100% !important; background: #000 !important; display: flex !important; justify-content: space-around !important; padding: 15px !important; border-top: 1px solid #333 !important; z-index: 999999 !important; }
+        /* Buttons Force Visible */
+        .search-wrap { position: fixed !important; top: 15px !important; left: 5% !important; width: 90% !important; z-index: 999999 !important; }
+        .sidebar { position: absolute !important; right: 10px !important; bottom: 80px !important; z-index: 999998 !important; display: flex; flex-direction: column; gap: 25px; }
+        .nav { position: fixed !important; bottom: 0 !important; width: 100% !important; background: #000 !important; z-index: 999999 !important; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; }
     </style>
 </head>
 <body>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search..." oninput="filterFeed()" class="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-600 outline-none">
+    <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Search..." oninput="filterFeed()" class="w-full bg-gray-900 border border-gray-600 text-white p-3 rounded-xl outline-none">
     </div>
 
     <div class="feed" id="feed-container"></div>
 
     <nav class="nav">
         <i class="fas fa-home text-2xl"></i>
-        <i class="fas fa-plus-square text-3xl text-red-600" onclick="document.getElementById('fileInput').click()"></i>
+        <i class="fas fa-plus-square text-4xl text-red-600" onclick="document.getElementById('fileInput').click()"></i>
         <i class="fas fa-user-circle text-2xl"></i>
     </nav>
 
@@ -36,29 +36,29 @@
 
     <script>
         function filterFeed() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.card').forEach(card => {
-                card.style.display = card.getAttribute('data-title').includes(query) ? "block" : "none";
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.card').forEach(c => {
+                c.style.display = c.getAttribute('data-title').includes(q) ? "block" : "none";
             });
         }
 
         document.getElementById('fileInput').onchange = (e) => {
-            const file = e.target.files[0];
-            const title = prompt("Video Title:") || "Video";
-            const url = URL.createObjectURL(file);
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.setAttribute('data-title', title.toLowerCase());
-            card.innerHTML = `
+            const f = e.target.files[0];
+            const t = prompt("Title:") || "Video";
+            const url = URL.createObjectURL(f);
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.setAttribute('data-title', t.toLowerCase());
+            div.innerHTML = `
                 <video src="${url}" loop playsinline autoplay muted></video>
                 <div class="sidebar">
                     <i class="fas fa-heart text-3xl"></i>
                     <i class="fas fa-share text-3xl"></i>
-                    <a href="${url}" download="${title}.mp4" class="text-cyan-400"><i class="fas fa-download text-3xl"></i></a>
+                    <a href="${url}" download="${t}.mp4" class="text-cyan-400"><i class="fas fa-download text-3xl"></i></a>
                     <i class="fas fa-trash text-3xl text-red-500" onclick="this.parentElement.parentElement.remove()"></i>
                 </div>
             `;
-            document.getElementById('feed-container').prepend(card);
+            document.getElementById('feed-container').prepend(div);
         };
     </script>
 </body>
