@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Vactra Professional Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #000; color: white; margin: 0; overflow: hidden; }
+        #canvas-area { width: 100vw; height: 100vh; position: relative; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        .btn-box { pointer-events: auto; }
+        /* Filters */
+        .f-vintage { filter: sepia(0.6); }
+        .f-bw { filter: grayscale(1); }
+        .f-bright { filter: brightness(1.5); }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-area">
+        <video id="preview" autoplay playsinline></video>
+        
+        <div class="ui-layer p-5 flex flex-col justify-between">
+            <div class="btn-box flex gap-2">
+                <input type="text" placeholder="Search..." class="w-full p-2 rounded bg-gray-800">
+                <button onclick="alert('AI Video Generating...')" class="bg-purple-600 px-4 rounded font-bold">AI</button>
+            </div>
+
+            <div class="btn-box flex flex-col gap-4">
+                <button onclick="applyFilter('f-vintage')" class="bg-amber-600 p-2 rounded">Vintage</button>
+                <button onclick="applyFilter('f-bw')" class="bg-gray-600 p-2 rounded">B&W</button>
+                <button onclick="applyFilter('f-bright')" class="bg-yellow-500 p-2 rounded">Bright</button>
+                <button onclick="addEmoji('😂')" class="text-3xl">😂</button>
+                <button onclick="addEmoji('🔥')" class="text-3xl">🔥</button>
+                <button onclick="addText()" class="bg-blue-600 p-2 rounded">Text</button>
+            </div>
+
+            <div class="btn-box flex justify-center gap-10 pb-5">
+                <button id="rec-btn" class="w-16 h-16 bg-red-600 rounded-full border-4"></button>
+                <button onclick="downloadVideo()" class="bg-green-600 px-6 py-2 rounded-xl">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('preview');
+        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(s => video.srcObject = s);
+        
+        function applyFilter(f) { video.className = f; }
+        
+        function addEmoji(e) {
+            const el = document.createElement('div');
+            el.className = 'absolute text-5xl';
+            el.style.top = Math.random()*70 + '%';
+            el.style.left = Math.random()*70 + '%';
+            el.innerText = e;
+            document.getElementById('canvas-area').appendChild(el);
+        }
+
+        function addText() {
+            const t = prompt("Text:");
+            const el = document.createElement('div');
+            el.className = 'absolute text-3xl font-bold bg-black/50 p-2';
+            el.style.top = '50%';
+            el.innerText = t;
+            document.getElementById('canvas-area').appendChild(el);
+        }
+
+        function downloadVideo() { alert("Video Save ho rahi hai..."); }
+    </script>
+</body>
+</html>
