@@ -2,69 +2,34 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vactra Professional Studio</title>
+    <title>Vactra Flow | Feed</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { margin: 0; background: #000; color: white; overflow: hidden; }
-        #canvas-area { width: 100vw; height: 100vh; position: relative; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
-        .btn-box { pointer-events: auto; }
-        .filter-vintage { filter: sepia(0.6) contrast(1.1); }
-        .filter-bw { filter: grayscale(100%); }
-    </style>
 </head>
-<body>
+<body class="bg-black text-white">
 
-    <div id="canvas-area">
-        <video id="preview" autoplay playsinline></video>
-        
-        <div class="ui-layer p-5">
-            <input type="text" placeholder="Search videos/effects..." class="btn-box w-full p-3 rounded-xl bg-gray-900 border border-gray-600 text-white">
-            
-            <div class="btn-box absolute right-5 top-24 flex flex-col gap-4">
-                <button onclick="setFilter('filter-vintage')" class="bg-amber-600 p-3 rounded-full">Vintage</button>
-                <button onclick="addEmoji('😂')" class="bg-pink-600 p-3 rounded-full">😂</button>
-                <button onclick="addEmoji('🔥')" class="bg-red-600 p-3 rounded-full">🔥</button>
-                <button onclick="addText()" class="bg-blue-600 p-3 rounded-full">Text</button>
-            </div>
+    <header class="p-4 flex gap-3 items-center sticky top-0 bg-black z-50">
+        <input type="text" placeholder="Search Vactra..." class="w-full p-2 rounded-lg bg-gray-800 border border-gray-700">
+        <span class="text-2xl font-bold italic text-pink-500">VACTRA</span>
+    </header>
 
-            <div class="btn-box absolute bottom-10 w-full flex justify-center items-center gap-10">
-                <button id="rec-btn" class="w-20 h-20 bg-red-600 rounded-full border-4 border-white"></button>
-                <button onclick="downloadVideo()" class="bg-green-600 px-6 py-3 rounded-xl font-bold">Download</button>
+    <main id="feed" class="flex flex-col items-center">
+        <div class="w-full h-[80vh] bg-gray-900 relative mb-4">
+            <video class="w-full h-full object-cover" controls>
+                <source src="vactra-video.mp4" type="video/mp4">
+            </video>
+            <div class="absolute right-2 bottom-20 flex flex-col gap-6 text-2xl">
+                <span>❤️</span>
+                <span>💬</span>
+                <span>↪️</span>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script>
-        const video = document.getElementById('preview');
-        // Camera access
-        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(s => video.srcObject = s);
-        
-        // Filter logic
-        function setFilter(f) { video.className = f; }
-        
-        // Emoji & Text logic
-        function addEmoji(e) {
-            const div = document.createElement('div');
-            div.className = 'absolute text-5xl';
-            div.style.top = Math.random()*70 + '%';
-            div.style.left = Math.random()*70 + '%';
-            div.innerText = e;
-            document.getElementById('canvas-area').appendChild(div);
-        }
+    <nav class="fixed bottom-0 w-full bg-black border-t border-gray-800 p-4 flex justify-between px-10">
+        <button class="text-xl">🏠</button>
+        <a href="studio.html" class="text-3xl bg-pink-600 px-6 rounded-full">+</a>
+        <button class="text-xl">👤</button>
+    </nav>
 
-        function addText() {
-            const t = prompt("Text likhein:");
-            const div = document.createElement('div');
-            div.className = 'absolute text-3xl font-bold text-white bg-black/50 p-2';
-            div.style.top = '40%';
-            div.innerText = t;
-            document.getElementById('canvas-area').appendChild(div);
-        }
-
-        function downloadVideo() { alert("Video processing... download shuru ho raha hai!"); }
-    </script>
 </body>
 </html>
