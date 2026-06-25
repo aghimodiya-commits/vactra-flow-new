@@ -2,56 +2,69 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Vactra Flow Studio</title>
+    <title>Vactra Pro Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-black text-white">
+<body class="bg-black text-white h-screen overflow-hidden">
 
-    <div class="relative w-full h-[80vh]">
+    <div class="relative w-full h-[75vh]">
         <video id="preview" class="w-full h-full object-cover" autoplay playsinline></video>
-        
-        <div id="ui-layer" class="absolute inset-0 p-5 flex flex-col justify-between">
-            <button onclick="openMusicLibrary()" class="bg-gray-800 p-2 rounded w-40">🎵 Add Music</button>
-            <div id="status" class="text-red-500 font-bold"></div>
-        </div>
+        <div id="ai-canvas" class="absolute inset-0 flex items-center justify-center"></div>
     </div>
 
-    <div class="p-6 flex justify-center gap-8">
-        <button id="rec-btn" class="w-16 h-16 bg-red-600 rounded-full border-4"></button>
-        <button onclick="accessGallery()" class="bg-blue-600 px-6 py-2 rounded">📁 Gallery</button>
-        <button onclick="downloadRecording()" class="bg-green-600 px-6 py-2 rounded">Download</button>
+    <div class="grid grid-cols-4 gap-2 p-4">
+        <button onclick="setFilter('sepia(1)')" class="bg-amber-700 p-2 rounded">Vintage</button>
+        <button onclick="generateAI()" class="bg-purple-700 p-2 rounded font-bold animate-pulse">✨ AI Gen</button>
+        <button onclick="addEmoji('🔥')" class="text-3xl">🔥</button>
+        <button onclick="document.getElementById('music-input').click()" class="bg-green-700 p-2 rounded">🎵 Music</button>
     </div>
+
+    <div class="flex justify-center gap-6 p-4">
+        <button id="rec-btn" class="w-16 h-16 bg-red-600 rounded-full border-4 border-white"></button>
+        <button onclick="downloadVideo()" class="bg-blue-600 px-6 py-2 rounded-full font-bold">Download</button>
+    </div>
+
+    <input type="file" id="music-input" class="hidden" accept="audio/*">
 
     <script>
-        let mediaRecorder;
+        const video = document.getElementById('preview');
         let chunks = [];
+        let mediaRecorder;
 
-        // Camera Start
+        // Camera Access
         navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(s => {
-            document.getElementById('preview').srcObject = s;
+            video.srcObject = s;
             mediaRecorder = new MediaRecorder(s);
             mediaRecorder.ondataavailable = e => chunks.push(e.data);
         });
 
-        // Record Button Logic
-        document.getElementById('rec-btn').onclick = () => {
-            mediaRecorder.start();
-            document.getElementById('status').innerText = "Recording...";
-        };
-
-        // Download Logic
-        function downloadRecording() {
-            const blob = new Blob(chunks, {type: 'video/mp4'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "vactra-video.mp4";
-            a.click();
+        // AI Generation Simulator
+        function generateAI() {
+            alert("AI Animation generate ho raha hai...");
+            document.getElementById('ai-canvas').innerHTML = '<div class="text-2xl font-bold bg-white/20 p-4">AI Animation Running...</div>';
         }
 
-        // Music & Gallery Placeholders
-        function openMusicLibrary() { alert("Music Library: Choose from 🎵 Trending Songs"); }
-        function accessGallery() { alert("Opening Phone Gallery..."); }
+        // Recording
+        document.getElementById('rec-btn').onclick = () => {
+            mediaRecorder.start();
+            alert("Recording started!");
+        };
+
+        // Download
+        function downloadVideo() {
+            mediaRecorder.stop();
+            setTimeout(() => {
+                const blob = new Blob(chunks, {type: 'video/mp4'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "vactra-pro.mp4";
+                a.click();
+            }, 1000);
+        }
+
+        function setFilter(f) { video.style.filter = f; }
+        function addEmoji(e) { /* Logic for emoji overlay */ }
     </script>
 </body>
 </html>
