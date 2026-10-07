@@ -17,9 +17,13 @@
         .sidebar { position: absolute; right: 12px; bottom: 160px; display: flex; flex-direction: column; gap: 22px; z-index: 1000; align-items: center; }
         .icon-box { text-align: center; cursor: pointer; transition: 0.2s; }
         .bottom-info { position: absolute; bottom: 120px; left: 15px; z-index: 1000; max-width: 80%; }
+        
+        /* Fixed Navigation Bar Styling */
         nav { z-index: 5000; background: #000; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; cursor: pointer; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #aaa; cursor: pointer; width: 20%; height: 100%; }
+        .nav-item i { font-size: 18px; margin-bottom: 2px; }
         .active-nav { color: white; }
+
         #video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
         .grid-item { aspect-ratio: 9/16; background: #111; overflow: hidden; position: relative; }
         .input-group { background: #272727; padding: 12px; border-radius: 10px; margin-bottom: 12px; }
@@ -82,12 +86,28 @@
         <div id="auth-content" class="p-6"></div>
     </div>
 
+    <!-- Cleaned Bottom Navigation Bar -->
     <nav>
-        <div class="nav-item active-nav" onclick="showScreen('home-screen')"><i class="fas fa-home text-xl mb-1"><span>Home</span></div>
-        <div class="nav-item" onclick="showScreen('shorts-screen')"><i class="fas fa-play-circle text-xl mb-1"></i><span>Shorts</span></div>
-        <div onclick="document.getElementById('fileInput').click()" class="text-4xl font-light cursor-pointer text-white">+</div>
-        <div class="nav-item"><i class="fas fa-layer-group text-xl mb-1"></i><span>Subs</span></div>
-        <div class="nav-item" onclick="handleProfileClick()"><i class="fas fa-user-circle text-xl mb-1"></i><span>You</span></div>
+        <div class="nav-item active-nav" onclick="showScreen('home-screen')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="showScreen('shorts-screen')">
+            <i class="fas fa-play-circle"></i>
+            <span>Shorts</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-plus-circle text-2xl text-red-600"></i>
+            <span>Create</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-layer-group"></i>
+            <span>Subs</span>
+        </div>
+        <div class="nav-item" onclick="handleProfileClick()">
+            <i class="fas fa-user-circle"></i>
+            <span>You</span>
+        </div>
     </nav>
 
     <input type="file" id="fileInput" accept="video/*" class="hidden">
@@ -163,7 +183,6 @@
             document.getElementById('video-grid').prepend(div); 
         }
 
-        // YouTube Style Search Function
         function searchVideos() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('video-card');
